@@ -5,11 +5,12 @@ import nodemailer from 'nodemailer';
 
 export async function GET(
     req: Request,
-    { params }: { params: { reference: string } }
+    { params }: { params: Promise<{ reference: string }> }
 ) {
     try {
+        const { reference } = await params;
         await dbConnect();
-        const booking = await Booking.findOne({ bookingReference: params.reference });
+        const booking = await Booking.findOne({ bookingReference: reference });
 
         if (!booking) {
             return NextResponse.json({ success: false, message: 'Booking not found' }, { status: 404 });
@@ -23,11 +24,12 @@ export async function GET(
 
 export async function PATCH(
     req: Request,
-    { params }: { params: { reference: string } }
+    { params }: { params: Promise<{ reference: string }> }
 ) {
     try {
+        const { reference } = await params;
         await dbConnect();
-        const booking = await Booking.findOne({ bookingReference: params.reference });
+        const booking = await Booking.findOne({ bookingReference: reference });
 
         if (!booking) {
             return NextResponse.json({ success: false, message: 'Booking not found' }, { status: 404 });
