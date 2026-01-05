@@ -47,7 +47,7 @@ export const DomainContextProvider = ({ children }: { children: ReactNode }) => 
             // 3. Current hostname
             const params = new URLSearchParams(window.location.search)
             const domainOverride = params.get('domain')
-            const allowAll = params.get('allowAll') === 'true'
+            const allowAll = params.get('allowAll') === 'true' // Testing/bypass parameter
 
             let hostname = window.location.hostname
             let isInIframe = window.parent !== window
@@ -66,6 +66,18 @@ export const DomainContextProvider = ({ children }: { children: ReactNode }) => 
             const domainToCheck = domainOverride || hostname
             console.log('🔍 Checking domain configuration for:', domainToCheck)
 
+            // Bypass domain check if allowAll is explicitly enabled (for testing only)
+            if (allowAll) {
+                console.log('⚠️ BYPASS MODE: allowAll parameter enabled (testing only)')
+                setDomainConfig({
+                    _id: 'bypass',
+                    domainName: domainToCheck,
+                    isActive: true,
+                    cars: []
+                })
+                return
+            }
+
             const response = await fetch(`/api/domains?domainName=${domainToCheck}`)
             const result = await response.json()
 
@@ -75,25 +87,14 @@ export const DomainContextProvider = ({ children }: { children: ReactNode }) => 
                     console.log('✅ Domain configuration found and active:', result.data.domainName)
                     setDomainConfig(result.data)
                 } else {
-                    console.warn('⚠️ Domain found but not active:', result.data.domainName)
+                    console.warn('⚠️ Domain found but INACTIVE:', result.data.domainName)
+                    console.warn('🚫 Form will not load - domain is disabled')
                     setDomainConfig(null)
                 }
             } else {
                 console.warn('❌ No domain configuration found for:', domainToCheck)
-
-                // Fallback: If in iframe and no config found, create a permissive default config
-                // This helps when referrer is blocked or domain isn't configured yet
-                if (isInIframe || allowAll) {
-                    console.log('🔓 Using fallback configuration for iframe/allowAll mode')
-                    setDomainConfig({
-                        _id: 'fallback',
-                        domainName: domainToCheck,
-                        isActive: true,
-                        cars: []
-                    })
-                } else {
-                    setDomainConfig(null)
-                }
+                console.warn('🚫 Form will not load - domain not registered')
+                setDomainConfig(null)
             }
         } catch (err) {
             console.error('Failed to fetch domain config:', err)
