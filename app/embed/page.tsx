@@ -24,6 +24,10 @@ interface SearchData {
     returnTime?: string
     passengers?: string
     mode: "transfer" | "rental"
+    estimatedDistance?: string
+    estimatedDuration?: string
+    pickupCoords?: { lat: number; lon: number }
+    dropoffCoords?: { lat: number; lon: number }
 }
 
 export default function EmbedPage() {
@@ -92,6 +96,56 @@ export default function EmbedPage() {
             setIsTransitioning(false)
         }, 300)
     }, [])
+
+    // Listen for formData URL parameter and auto-trigger search
+    useEffect(() => {
+        if (typeof window === 'undefined') return
+
+        const params = new URLSearchParams(window.location.search)
+        const formDataParam = params.get('formData')
+
+        if (formDataParam) {
+            try {
+                console.log('📩 Received formData in iframe')
+                const decoded = decodeURIComponent(formDataParam)
+                const data = JSON.parse(decoded)
+                console.log('✅ Parsed data:', data)
+
+                // Set the correct tab based on service type
+                if (data.serviceType === 'airport-transfers') {
+                    setActiveTab('transfers')
+                } else if (data.serviceType === 'car-rentals') {
+                    setActiveTab('rentals')
+                }
+
+                // Transform the data to match SearchData interface
+                const searchData: SearchData = {
+                    pickupLocation: data.pickupLocation || '',
+                    dropoffLocation: data.dropoffLocation || '',
+                    pickupDate: data.pickupDate || '',
+                    pickupTime: data.pickupTime || '',
+                    returnDate: data.returnDate,
+                    returnTime: data.returnTime,
+                    passengers: data.passengers || '1',
+                    mode: data.mode || 'transfer',
+                    estimatedDistance: data.estimatedDistance,
+                    estimatedDuration: data.estimatedDuration,
+                    pickupCoords: data.pickupCoords,
+                    dropoffCoords: data.dropoffCoords
+                }
+
+                console.log('🎯 Auto-triggering search with data:', searchData)
+
+                // Automatically trigger the search after a short delay to ensure the form is loaded
+                setTimeout(() => {
+                    handleSearch(searchData)
+                }, 1500)
+
+            } catch (error) {
+                console.error('❌ Error parsing formData:', error)
+            }
+        }
+    }, [handleSearch])
 
     const handleTabChange = (tab: TabType) => {
         if (tab !== activeTab) {
