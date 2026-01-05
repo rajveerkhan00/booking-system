@@ -40,7 +40,11 @@ export const DomainContextProvider = ({ children }: { children: ReactNode }) => 
     const fetchDomainConfig = useCallback(async () => {
         try {
             setLoading(true)
-            const hostname = window.location.hostname
+
+            // Check for domain override in URL query params
+            const params = new URLSearchParams(window.location.search)
+            const domainOverride = params.get('domain')
+            const hostname = domainOverride || window.location.hostname
 
             // Helpful for local testing: localhost would likely not match any domain
             // In production, this will be the actual domain name.

@@ -1,0 +1,312 @@
+"use client"
+
+import { useState, useCallback, useEffect, useRef } from "react"
+import Skeleton from "../components/Skeleton"
+import AirportTransfersForm from "../components/airport-transfers-form"
+import CarRentalsForm from "../components/car-rentals-form"
+import { BookingForm } from "../components/booking-form"
+import { TransferBookingForm } from "../components/transfer-booking-form"
+import { Plane, Car, Shield, Zap, BadgeCheck, ArrowLeft, Globe, Search } from "lucide-react"
+import { useTheme } from "../context/ThemeContext"
+import { useDomain } from "../context/DomainContext"
+import Link from "next/link"
+import ManageBookingModal from "../components/ManageBookingModal"
+
+type TabType = "transfers" | "rentals"
+type ViewMode = "search" | "booking"
+
+interface SearchData {
+    pickupLocation: string
+    dropoffLocation: string
+    pickupDate: string
+    pickupTime: string
+    returnDate?: string
+    returnTime?: string
+    passengers?: string
+    mode: "transfer" | "rental"
+}
+
+export default function EmbedPage() {
+    const [activeTab, setActiveTab] = useState<TabType>("transfers")
+    const [viewMode, setViewMode] = useState<ViewMode>("search")
+    const [searchData, setSearchData] = useState<SearchData | null>(null)
+    const [isTransitioning, setIsTransitioning] = useState(false)
+    const [isFormLoading, setIsFormLoading] = useState(false)
+    const [showManageBooking, setShowManageBooking] = useState(false)
+
+    const { theme, loading: themeLoading } = useTheme()
+    const { domainConfig, loading: domainLoading } = useDomain()
+    const [minDelayPassed, setMinDelayPassed] = useState(false)
+    const [embedParams, setEmbedParams] = useState({ hideBg: false, hideHeader: false })
+    const containerRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        const timer = setTimeout(() => setMinDelayPassed(true), 1000)
+
+        // Parse embed-specific params
+        if (typeof window !== 'undefined') {
+            const params = new URLSearchParams(window.location.search)
+            setEmbedParams({
+                hideBg: params.get('hide-bg') === 'true',
+                hideHeader: params.get('hide-header') === 'true'
+            })
+        }
+
+        return () => clearTimeout(timer)
+    }, [])
+
+    // Auto-resize logic
+    useEffect(() => {
+        if (!containerRef.current) return
+
+        const resizeObserver = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                const height = entry.contentRect.height
+                window.parent.postMessage({ type: 'resize', height: height + 50 }, '*')
+            }
+        })
+
+        resizeObserver.observe(containerRef.current)
+        return () => resizeObserver.disconnect()
+    }, [viewMode, activeTab, isFormLoading])
+
+    const showSkeleton = themeLoading || domainLoading || !minDelayPassed
+
+    const handleSearch = useCallback((data: SearchData) => {
+        setIsTransitioning(true)
+        setSearchData(data)
+
+        // Smooth transition to booking view
+        setTimeout(() => {
+            setViewMode("booking")
+            setIsTransitioning(false)
+        }, 300)
+    }, [])
+
+    const handleBackToSearch = useCallback(() => {
+        setIsTransitioning(true)
+        setTimeout(() => {
+            setViewMode("search")
+            setIsTransitioning(false)
+        }, 300)
+    }, [])
+
+    const handleTabChange = (tab: TabType) => {
+        if (tab !== activeTab) {
+            setIsFormLoading(true)
+            setTimeout(() => {
+                setActiveTab(tab)
+                setIsFormLoading(false)
+            }, 500)
+        }
+    }
+
+    // Dynamic background style based on theme
+    const backgroundStyle = theme ? {
+        background: embedParams.hideBg ? 'transparent' : `linear-gradient(to bottom right, ${theme.backgroundStart}, ${theme.backgroundMiddle}, ${theme.backgroundEnd})`
+    } : undefined
+
+    // Background for the whole page
+    const pageStyle = showSkeleton
+        ? { background: embedParams.hideBg ? 'transparent' : '#ffffff' }
+        : (backgroundStyle || { background: embedParams.hideBg ? 'transparent' : 'linear-gradient(to bottom right, #14b8a6, #0d9488, #0f766e)' });
+
+    if (!domainLoading && !domainConfig) {
+        return (
+            <div className={`min-h-screen flex items-center justify-center ${embedParams.hideBg ? '' : 'bg-gray-50'} p-4`}>
+                <div className="text-center max-w-md animate-fade-in">
+                    <div className="w-24 h-24 bg-gray-100 rounded-3xl flex items-center justify-center mx-auto mb-6 border-2 border-dashed border-gray-200">
+                        <Globe className="w-12 h-12 text-gray-400" />
+                    </div>
+                    <h1 className="text-3xl font-bold text-gray-800 mb-3">Service Unavailable</h1>
+                    <p className="text-gray-500 text-lg leading-relaxed">
+                        This booking form is not configured for this domain. Please contact support.
+                    </p>
+                </div>
+            </div>
+        )
+    }
+
+    return (
+        <div
+            ref={containerRef}
+            className={`${embedParams.hideBg ? '' : 'min-h-screen'} relative overflow-hidden`}
+            style={pageStyle}
+        >
+            {/* Animated background elements */}
+            {!showSkeleton && !embedParams.hideBg && (
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div
+                        className="absolute top-20 left-10 w-64 h-64 rounded-full blur-3xl animate-float"
+                        style={{ backgroundColor: theme ? `${theme.primaryColor}33` : 'rgba(20, 184, 166, 0.2)' }}
+                    />
+                    <div
+                        className="absolute top-40 right-20 w-96 h-96 rounded-full blur-3xl animate-float stagger-2"
+                        style={{ backgroundColor: theme ? `${theme.secondaryColor}26` : 'rgba(59, 130, 246, 0.15)' }}
+                    />
+                </div>
+            )}
+
+            {showSkeleton ? (
+                <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
+                    <div className="w-full max-w-4xl">
+                        {/* Form Skeleton */}
+                        <div className="bg-white border-2 border-gray-100 p-8 rounded-2xl shadow-lg">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                                <Skeleton className="w-full h-12 rounded-xl" />
+                                <Skeleton className="w-full h-12 rounded-xl" />
+                                <Skeleton className="w-full h-12 rounded-xl" />
+                            </div>
+                            <Skeleton className="h-14 w-full rounded-xl" />
+                        </div>
+                    </div>
+                </div>
+            ) : viewMode === "search" ? (
+                <div className={`relative z-10 flex items-center justify-center min-h-screen p-4 ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
+                    <div className="w-full max-w-4xl animate-fade-in">
+                        {/* Logo/Header (Optional in embed) */}
+                        {!embedParams.hideHeader && (
+                            <div className="text-center mb-8">
+                                <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 drop-shadow-lg">
+                                    Book Your Transportation
+                                </h1>
+                                <div className="flex justify-center gap-4">
+                                    <button
+                                        onClick={() => setShowManageBooking(true)}
+                                        className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-lg text-white text-sm font-semibold transition-all hover:scale-105 active:scale-95 shadow-lg"
+                                    >
+                                        <Search className="w-3.5 h-3.5" />
+                                        Manage Booking
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Tab Headers */}
+                        <div className="flex flex-col sm:flex-row mb-1 gap-1 sm:gap-0">
+                            <button
+                                onClick={() => handleTabChange("transfers")}
+                                className={`flex items-center gap-3 px-6 py-4 text-base font-semibold transition-all duration-300 rounded-2xl sm:rounded-none sm:rounded-t-2xl ${activeTab === "transfers"
+                                    ? "bg-white text-gray-800 shadow-lg"
+                                    : "bg-white/20 text-white hover:bg-white/30 backdrop-blur-md"
+                                    }`}
+                            >
+                                <div
+                                    className={`w-9 h-9 rounded-xl flex items-center justify-center`}
+                                    style={activeTab === "transfers" ? {
+                                        background: theme ? `linear-gradient(to bottom right, ${theme.primaryColor}, ${theme.primaryDark})` : 'linear-gradient(to bottom right, #0d9488, #0f766e)'
+                                    } : { backgroundColor: 'rgba(255,255,255,0.2)' }}
+                                >
+                                    <Plane className={`w-4 h-4 ${activeTab === "transfers" ? "text-white" : ""}`} />
+                                </div>
+                                Airport Transfers
+                            </button>
+                            <button
+                                onClick={() => handleTabChange("rentals")}
+                                className={`flex items-center gap-3 px-6 py-4 text-base font-semibold transition-all duration-300 rounded-2xl sm:rounded-none sm:rounded-t-2xl ${activeTab === "rentals"
+                                    ? "bg-white text-gray-800 shadow-lg"
+                                    : "bg-white/20 text-white hover:bg-white/30 backdrop-blur-md"
+                                    }`}
+                            >
+                                <div
+                                    className={`w-9 h-9 rounded-xl flex items-center justify-center`}
+                                    style={activeTab === "rentals" ? {
+                                        background: theme ? `linear-gradient(to bottom right, ${theme.secondaryColor}, ${theme.secondaryDark})` : 'linear-gradient(to bottom right, #3b82f6, #2563eb)'
+                                    } : { backgroundColor: 'rgba(255,255,255,0.2)' }}
+                                >
+                                    <Car className={`w-4 h-4 ${activeTab === "rentals" ? "text-white" : ""}`} />
+                                </div>
+                                Car Rentals
+                            </button>
+                        </div>
+
+                        {/* Form Container */}
+                        <div className="glass-card-elevated p-5 md:p-8 rounded-2xl sm:rounded-tl-none min-h-[280px]">
+                            {isFormLoading ? (
+                                <div className="animate-pulse space-y-8">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        <Skeleton className="w-full h-12 rounded-xl bg-white/20" />
+                                        <Skeleton className="w-full h-12 rounded-xl bg-white/20" />
+                                        <Skeleton className="w-full h-12 rounded-xl bg-white/20" />
+                                    </div>
+                                    <Skeleton className="h-14 w-full rounded-xl bg-white/20" />
+                                </div>
+                            ) : (
+                                <div className="animate-fade-in">
+                                    {activeTab === "transfers" && (
+                                        <AirportTransfersForm onSearch={handleSearch} />
+                                    )}
+                                    {activeTab === "rentals" && (
+                                        <CarRentalsForm onSearch={handleSearch} />
+                                    )}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Trust badges */}
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 animate-fade-in">
+                            <div className="flex items-center gap-3 text-white/95 bg-white/10 backdrop-blur-md px-4 py-3 rounded-xl border border-white/20">
+                                <Shield className="w-4 h-4" />
+                                <span className="text-xs font-semibold">Secure Booking</span>
+                            </div>
+                            <div className="flex items-center gap-3 text-white/95 bg-white/10 backdrop-blur-md px-4 py-3 rounded-xl border border-white/20">
+                                <Zap className="w-4 h-4" />
+                                <span className="text-xs font-semibold">Instant Confirmation</span>
+                            </div>
+                            <div className="flex items-center gap-3 text-white/95 bg-white/10 backdrop-blur-md px-4 py-3 rounded-xl border border-white/20">
+                                <BadgeCheck className="w-4 h-4" />
+                                <span className="text-xs font-semibold">Best Price</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                <div className={`relative z-10 min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
+                    {/* Header for booking flow */}
+                    <div
+                        className="py-4 px-4 shadow-lg sticky top-0 z-50 backdrop-blur-md"
+                        style={theme ? {
+                            background: `linear-gradient(to right, ${theme.backgroundMiddle}ee, ${theme.backgroundMiddle}ee, ${theme.backgroundEnd}ee)`
+                        } : { background: 'linear-gradient(to right, rgba(13, 148, 136, 0.95), rgba(13, 148, 136, 0.95), rgba(15, 118, 110, 0.95))' }}
+                    >
+                        <div className="max-w-6xl mx-auto flex items-center justify-between">
+                            <button
+                                onClick={handleBackToSearch}
+                                className="flex items-center gap-2 text-white hover:text-white/80 transition-all font-semibold group bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg border border-white/10"
+                            >
+                                <ArrowLeft className="w-4 h-4" />
+                                Back
+                            </button>
+                            <h1 className="text-lg font-bold text-white flex items-center gap-2">
+                                {searchData?.mode === "transfer" ? <Plane className="w-5 h-5" /> : <Car className="w-5 h-5" />}
+                                {searchData?.mode === "transfer" ? "Transfer" : "Rental"} Booking
+                            </h1>
+                            <div className="w-20" />
+                        </div>
+                    </div>
+
+                    {/* Booking Form */}
+                    <div className="py-6 px-4">
+                        {searchData?.mode === "transfer" ? (
+                            <TransferBookingForm
+                                initialData={searchData}
+                                onBack={handleBackToSearch}
+                                isLoading={isTransitioning}
+                            />
+                        ) : (
+                            <BookingForm
+                                initialData={searchData}
+                                onBack={handleBackToSearch}
+                                isLoading={isTransitioning}
+                            />
+                        )}
+                    </div>
+                </div>
+            )}
+            <ManageBookingModal
+                isOpen={showManageBooking}
+                onClose={() => setShowManageBooking(false)}
+            />
+        </div>
+    )
+}
