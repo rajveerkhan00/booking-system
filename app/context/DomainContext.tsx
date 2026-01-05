@@ -1,4 +1,5 @@
 'use client'
+// Updated: 2026-01-05 - Enhanced domain detection with iframe referrer support
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react'
 
