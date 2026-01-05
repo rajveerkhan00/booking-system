@@ -32,6 +32,8 @@ export const metadata: Metadata = {
   },
 }
 
+import { PayPalProvider } from "./components/PayPalProvider"
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -42,7 +44,9 @@ export default function RootLayout({
       <body className={`font-sans antialiased`} suppressHydrationWarning>
         <DomainContextProvider>
           <ThemeContextProvider>
-            {children}
+            <PayPalProvider>
+              {children}
+            </PayPalProvider>
           </ThemeContextProvider>
         </DomainContextProvider>
         <Analytics />

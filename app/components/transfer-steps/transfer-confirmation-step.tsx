@@ -16,6 +16,8 @@ interface TransferConfirmationStepProps {
     bookingReference?: string | null
 }
 
+import { PayPalButtons } from "@paypal/react-paypal-js"
+
 export function TransferConfirmationStep({
     bookingData,
     onUpdateData,
@@ -24,29 +26,12 @@ export function TransferConfirmationStep({
     onEditQuote,
     isLoading = false,
     exchangeRates,
-    bookingReference
+    bookingReference: propBookingReference
 }: TransferConfirmationStepProps) {
     const [isConfirming, setIsConfirming] = useState(false)
     const [isConfirmed, setIsConfirmed] = useState(false)
-
-    const handleConfirm = async () => {
-        if (!bookingData.termsAgreed) return
-
-        setIsConfirming(true)
-        try {
-            // Wait for both the API call and a minimum time for UX
-            await Promise.all([
-                onConfirm(), // This performs the API call
-                new Promise(resolve => setTimeout(resolve, 2000))
-            ])
-            setIsConfirmed(true)
-        } catch (error) {
-            console.error("Booking confirmation failed:", error)
-            alert("Something went wrong with your booking. Please try again.")
-        } finally {
-            setIsConfirming(false)
-        }
-    }
+    const [bookingReference, setBookingReference] = useState(propBookingReference)
+    const [error, setError] = useState<string | null>(null)
 
     const formatDate = (dateStr: string) => {
         try {
@@ -69,6 +54,106 @@ export function TransferConfirmationStep({
     const extrasCost = 0 // Can add luggage pricing logic
     const totalPrice = transferCost + extrasCost
 
+    // PayPal doesn't support all currencies (like PKR). 
+    // We'll calculate the USD amount for the transaction.
+    const payAmount = exchangeRates
+        ? (totalPrice / exchangeRates[bookingData.currency]).toFixed(2)
+        : (bookingData.selectedTransfer?.price || 0).toFixed(2)
+
+    const handleCreateOrder = async () => {
+        try {
+            console.log("Creating Transfer PayPal order with amount:", payAmount, "USD");
+            const response = await fetch("/api/paypal/create-order", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    amount: payAmount,
+                    currency: "USD",
+                }),
+            })
+
+            const order = await response.json()
+            console.log("Transfer PayPal API Response:", order);
+            if (order.error) throw new Error(order.error)
+            return order.id
+        } catch (err: any) {
+            console.error("Error creating PayPal order:", err)
+            setError(err.message || "Could not initiate PayPal payment. Please try again.")
+            throw err
+        }
+    }
+
+    const handleApprove = async (data: any) => {
+        setIsConfirming(true)
+        setError(null)
+        try {
+            const payload = {
+                bookingType: 'transfer',
+                fromLocation: bookingData.fromLocation,
+                toLocation: bookingData.toLocation,
+                date: bookingData.date,
+                pickupTime: bookingData.pickupTime,
+                passengers: bookingData.passengers,
+                currency: bookingData.currency,
+                totalPrice: bookingData.selectedTransfer?.price || 0, // Store original price or converted? Original is better for DB
+
+                selectedVehicle: {
+                    id: bookingData.selectedTransfer?.id,
+                    name: bookingData.selectedTransfer?.name,
+                    type: bookingData.selectedTransfer?.type,
+                    image: bookingData.selectedTransfer?.image,
+                    price: bookingData.selectedTransfer?.price
+                },
+
+                fromCoords: bookingData.fromCoords,
+                toCoords: bookingData.toCoords,
+                estimatedTime: bookingData.estimatedTime,
+                estimatedDistance: bookingData.estimatedDistance,
+
+                pickupAddress: bookingData.pickupAddress,
+                destinationAddress: bookingData.destinationAddress,
+                specialInstructions: bookingData.specialInstructions,
+                smallLuggage: bookingData.smallLuggage,
+                mediumLuggage: bookingData.mediumLuggage,
+
+                passengerTitle: bookingData.passengerTitle,
+                passengerName: bookingData.passengerName,
+                email: bookingData.email,
+                phone: bookingData.phone,
+                countryCode: bookingData.countryCode,
+
+                status: 'confirmed'
+            }
+
+            const response = await fetch("/api/paypal/capture-order", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    orderID: data.orderID,
+                    bookingData: payload
+                }),
+            })
+
+            const result = await response.json()
+
+            if (!result.success) {
+                throw new Error(result.error || 'Payment capture failed')
+            }
+
+            setBookingReference(result.bookingReference)
+            setIsConfirmed(true)
+        } catch (err: any) {
+            console.error("Error capturing PayPal order:", err)
+            setError(err.message || "Payment successful but booking failed. Please contact support.")
+        } finally {
+            setIsConfirming(false)
+        }
+    }
+
     if (isConfirmed) {
         return (
             <div className="max-w-2xl mx-auto step-transition">
@@ -77,7 +162,7 @@ export function TransferConfirmationStep({
                         <span className="text-4xl text-white">✓</span>
                     </div>
                     <h2 className="text-2xl font-bold text-gray-800 mb-3">Booking Confirmed!</h2>
-                    <p className="text-gray-600 mb-6">Your transfer has been successfully booked</p>
+                    <p className="text-gray-600 mb-6">Your transfer has been successfully booked and paid via PayPal</p>
 
                     <div className="bg-primary/5 border border-primary/20 rounded-lg p-6 mb-6 text-left">
                         <p className="text-primary-dark font-semibold mb-2">Booking Reference:</p>
@@ -156,7 +241,7 @@ export function TransferConfirmationStep({
                                 onClick={onEditQuote}
                                 className="bg-primary hover:bg-primary-dark text-white text-xs font-semibold px-3 py-1.5 rounded transition-colors flex items-center gap-1"
                             >
-                                Edit Quote ✏️
+                                Edit ✏️
                             </button>
                         </div>
                         <div className="p-4 space-y-3 text-sm">
@@ -185,16 +270,6 @@ export function TransferConfirmationStep({
                             <div>
                                 <p className="text-gray-500 text-xs">Passengers</p>
                                 <p className="text-gray-800 font-medium">{bookingData.passengers}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Currency Selector */}
-                    <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
-                        <div className="flex justify-between items-center">
-                            <span className="text-gray-600 text-sm">Change Currency</span>
-                            <div className="bg-primary text-white font-semibold px-3 py-1.5 rounded text-sm">
-                                {bookingData.currency} ▼
                             </div>
                         </div>
                     </div>
@@ -284,24 +359,34 @@ export function TransferConfirmationStep({
                                 </label>
                             </div>
 
-                            {/* Continue to Payment Button */}
-                            <button
-                                onClick={handleConfirm}
-                                disabled={!bookingData.termsAgreed || isConfirming}
-                                className={`w-full py-4 rounded font-semibold text-lg transition-all flex items-center justify-center gap-2 ${bookingData.termsAgreed && !isConfirming
-                                    ? 'bg-primary hover:bg-primary-dark text-white shadow-lg shadow-primary/30'
-                                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                    }`}
-                            >
+                            {/* PayPal Buttons */}
+                            {error && (
+                                <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 rounded-lg text-sm font-medium">
+                                    {error}
+                                </div>
+                            )}
+
+                            <div className="mb-6">
                                 {isConfirming ? (
-                                    <>
-                                        <span className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin" />
+                                    <div className="w-full py-4 bg-gray-100 rounded flex items-center justify-center gap-2 text-gray-400 font-bold">
+                                        <span className="w-6 h-6 border-3 border-gray-300 border-t-gray-500 rounded-full animate-spin" />
                                         Processing Payment...
-                                    </>
+                                    </div>
                                 ) : (
-                                    <>CONTINUE TO PAYMENT →</>
+                                    <div className={bookingData.termsAgreed ? 'opacity-100' : 'opacity-50 pointer-events-none'}>
+                                        <PayPalButtons
+                                            style={{ layout: 'vertical', color: 'blue', shape: 'rect', label: 'pay' }}
+                                            createOrder={handleCreateOrder}
+                                            onApprove={handleApprove}
+                                            onCancel={() => setError("Payment cancelled. Please try again to complete your booking.")}
+                                            onError={(err) => {
+                                                console.error("PayPal Error:", err)
+                                                setError("There was an error with PayPal. Please try again.")
+                                            }}
+                                        />
+                                    </div>
                                 )}
-                            </button>
+                            </div>
                         </div>
                     </div>
 
@@ -309,7 +394,8 @@ export function TransferConfirmationStep({
                     <div className="flex justify-start">
                         <button
                             onClick={onBack}
-                            className="px-6 py-3 border border-gray-300 rounded text-gray-600 font-medium hover:bg-gray-50 transition-colors"
+                            disabled={isConfirming}
+                            className="px-6 py-3 border border-gray-300 rounded text-gray-600 font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
                         >
                             ← Back to Details
                         </button>

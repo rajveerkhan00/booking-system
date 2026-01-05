@@ -77,6 +77,15 @@ const BookingSchema = new mongoose.Schema({
         default: 'pending'
     },
 
+    // Payment Info
+    paymentStatus: {
+        type: String,
+        enum: ['unpaid', 'paid', 'refunded'],
+        default: 'unpaid'
+    },
+    paypalOrderId: String,
+    paypalCaptureId: String,
+
     createdAt: {
         type: Date,
         default: Date.now

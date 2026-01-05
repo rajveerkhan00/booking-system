@@ -40,16 +40,20 @@ interface ConfirmationStepProps {
   bookingReference?: string
 }
 
+import { PayPalButtons } from "@paypal/react-paypal-js"
+
 export function ConfirmationStep({
   bookingData,
   onConfirm,
   onBack,
   isLoading = false,
   exchangeRates,
-  bookingReference
+  bookingReference: propBookingReference
 }: ConfirmationStepProps) {
   const [isConfirming, setIsConfirming] = useState(false)
   const [isConfirmed, setIsConfirmed] = useState(false)
+  const [bookingReference, setBookingReference] = useState(propBookingReference)
+  const [error, setError] = useState<string | null>(null)
 
   const carPrice = bookingData.selectedCar?.price || 0
   const extrasTotal =
@@ -58,13 +62,104 @@ export function ConfirmationStep({
     bookingData.extras.boosterSeat * 2806.91
   const totalPrice = carPrice + extrasTotal
 
-  const handleConfirm = async () => {
-    setIsConfirming(true)
+  const getConvertedPrice = (price: number) => {
+    if (!exchangeRates) return price
+    return Math.round(convertPrice(price, exchangeRates['USD'], exchangeRates[bookingData.currency]))
+  }
+
+  const convertedTotal = getConvertedPrice(totalPrice)
+
+  // PayPal doesn't support all currencies (like PKR). 
+  // We'll calculate the USD amount for the transaction.
+  const usdAmount = exchangeRates
+    ? (totalPrice / exchangeRates['USD'] * exchangeRates['USD']).toFixed(2) // This is just totalPrice if base is USD
+    : totalPrice.toFixed(2)
+
+  // Actually, if totalPrice is base (USD), we just use it.
+  // We'll use the price converted to USD explicitly to be safe.
+  const payAmount = exchangeRates
+    ? (convertedTotal / exchangeRates[bookingData.currency]).toFixed(2)
+    : totalPrice.toFixed(2)
+
+  const handleCreateOrder = async () => {
     try {
-      await onConfirm()
+      console.log("Creating PayPal order with amount:", payAmount, "USD");
+      const response = await fetch("/api/paypal/create-order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          amount: payAmount,
+          currency: "USD",
+        }),
+      })
+
+      const order = await response.json()
+      console.log("PayPal API Response:", order);
+      if (order.error) throw new Error(order.error)
+      return order.id
+    } catch (err: any) {
+      console.error("Error creating PayPal order:", err)
+      setError(err.message || "Could not initiate PayPal payment. Please try again.")
+      throw err
+    }
+  }
+
+  const handleApprove = async (data: any) => {
+    setIsConfirming(true)
+    setError(null)
+    try {
+      const payload = {
+        bookingType: 'rental',
+        fromLocation: bookingData.pickupLocation,
+        toLocation: bookingData.dropoffLocation,
+        date: bookingData.pickupDate,
+        pickupTime: bookingData.pickupTime,
+        dropoffDate: bookingData.dropoffDate,
+        dropoffTime: bookingData.dropoffTime,
+        currency: bookingData.currency,
+        totalPrice: totalPrice,
+
+        selectedVehicle: {
+          id: bookingData.selectedCar?.id,
+          name: bookingData.selectedCar?.name,
+          type: bookingData.selectedCar?.category,
+          image: bookingData.selectedCar?.image,
+          price: bookingData.selectedCar?.price
+        },
+
+        passengerName: `${bookingData.driverDetails.firstName} ${bookingData.driverDetails.lastName}`,
+        email: bookingData.driverDetails.email,
+        phone: bookingData.driverDetails.phone,
+        licenseNumber: bookingData.driverDetails.licensNumber,
+
+        rentalExtras: bookingData.extras,
+        status: 'confirmed'
+      }
+
+      const response = await fetch("/api/paypal/capture-order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          orderID: data.orderID,
+          bookingData: payload
+        }),
+      })
+
+      const result = await response.json()
+
+      if (!result.success) {
+        throw new Error(result.error || 'Payment capture failed')
+      }
+
+      setBookingReference(result.bookingReference)
       setIsConfirmed(true)
-    } catch (error) {
-      console.error("Confirmation failed", error)
+    } catch (err: any) {
+      console.error("Error capturing PayPal order:", err)
+      setError(err.message || "Payment successful but booking failed. Please contact support.")
     } finally {
       setIsConfirming(false)
     }
@@ -91,7 +186,7 @@ export function ConfirmationStep({
             <PartyPopper className="w-12 h-12 text-white" />
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-3">Booking Confirmed!</h2>
-          <p className="text-gray-600 mb-8">Your reservation has been successfully completed</p>
+          <p className="text-gray-600 mb-8">Your reservation has been successfully completed and paid via PayPal</p>
 
           <div className="bg-gradient-to-br from-success/10 to-primary/10 border border-success/20 rounded-2xl p-6 mb-8 text-left">
             <p className="text-success-dark font-semibold mb-2 text-sm">Confirmation Number:</p>
@@ -154,7 +249,7 @@ export function ConfirmationStep({
               <span className="w-10 h-10 bg-gradient-to-br from-secondary to-secondary-dark rounded-xl flex items-center justify-center text-white text-lg shadow-glow-secondary">4</span>
               Confirm Your Booking
             </h2>
-            <p className="text-gray-600 ml-[52px]">Please review all details before confirming</p>
+            <p className="text-gray-600 ml-[52px]">Please review all details and proceed to payment</p>
           </div>
 
           {/* Booking Details */}
@@ -300,34 +395,43 @@ export function ConfirmationStep({
 
           {/* Action Buttons */}
           <div className="border-t border-gray-100 pt-8 animate-fade-in stagger-5">
+            {error && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm font-medium animate-shake">
+                {error}
+              </div>
+            )}
+
             <div className="flex flex-col sm:flex-row gap-4">
               <button
                 onClick={onBack}
-                className="w-full sm:flex-1 btn-outline flex items-center justify-center gap-2"
+                disabled={isConfirming}
+                className="w-full sm:flex-1 btn-outline flex items-center justify-center gap-2 h-[54px]"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Edit Details
               </button>
-              <button
-                onClick={handleConfirm}
-                disabled={isConfirming}
-                className="w-full sm:flex-[2] bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-success/30 hover:shadow-xl hover:shadow-emerald-500/40 transition-all flex items-center justify-center gap-2 hover:-translate-y-0.5"
-              >
+              <div className="w-full sm:flex-[2]">
                 {isConfirming ? (
-                  <>
+                  <button disabled className="w-full bg-gray-100 text-gray-400 font-bold py-4 rounded-xl flex items-center justify-center gap-2">
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    Confirming Booking...
-                  </>
+                    Processing Payment...
+                  </button>
                 ) : (
-                  <>
-                    <Check className="w-5 h-5" />
-                    Confirm & Book Now
-                  </>
+                  <PayPalButtons
+                    style={{ layout: 'horizontal', height: 54, color: 'blue', shape: 'pill', label: 'pay' }}
+                    createOrder={handleCreateOrder}
+                    onApprove={handleApprove}
+                    onCancel={() => setError("Payment cancelled. Please try again to complete your booking.")}
+                    onError={(err) => {
+                      console.error("PayPal Error:", err)
+                      setError("There was an error with PayPal. Please try again.")
+                    }}
+                  />
                 )}
-              </button>
+              </div>
             </div>
             <p className="text-gray-500 text-sm text-center mt-4">
-              By clicking confirm, you agree to our terms and conditions
+              By clicking pay, you agree to our terms and conditions. The booking will be confirmed only after successful payment.
             </p>
           </div>
         </div>
