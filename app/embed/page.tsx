@@ -59,10 +59,12 @@ export default function EmbedPage() {
     useEffect(() => {
         if (!containerRef.current) return
 
-        const resizeObserver = new ResizeObserver((entries) => {
-            for (const entry of entries) {
-                const height = entry.contentRect.height
-                window.parent.postMessage({ type: 'resize', height: height + 50 }, '*')
+        const resizeObserver = new ResizeObserver(() => {
+            if (containerRef.current) {
+                // Use scrollHeight to get the actual content height
+                // This is more reliable than contentRect in an iframe context
+                const height = containerRef.current.scrollHeight
+                window.parent.postMessage({ type: 'resize', height: height }, '*')
             }
         })
 
@@ -113,7 +115,7 @@ export default function EmbedPage() {
 
     if (!domainLoading && !domainConfig) {
         return (
-            <div className={`min-h-screen flex items-center justify-center ${embedParams.hideBg ? '' : 'bg-gray-50'} p-4`}>
+            <div className={`py-12 flex items-center justify-center ${embedParams.hideBg ? '' : 'bg-gray-50'} p-4`}>
                 <div className="text-center max-w-md animate-fade-in">
                     <div className="w-24 h-24 bg-gray-100 rounded-3xl flex items-center justify-center mx-auto mb-6 border-2 border-dashed border-gray-200">
                         <Globe className="w-12 h-12 text-gray-400" />
@@ -130,7 +132,7 @@ export default function EmbedPage() {
     return (
         <div
             ref={containerRef}
-            className={`${embedParams.hideBg ? '' : 'min-h-screen'} relative overflow-hidden`}
+            className="relative overflow-hidden w-full"
             style={pageStyle}
         >
             {/* Animated background elements */}
@@ -148,7 +150,7 @@ export default function EmbedPage() {
             )}
 
             {showSkeleton ? (
-                <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
+                <div className="relative z-10 flex items-center justify-center py-4 px-4">
                     <div className="w-full max-w-4xl">
                         {/* Form Skeleton */}
                         <div className="bg-white border-2 border-gray-100 p-8 rounded-2xl shadow-lg">
@@ -162,7 +164,7 @@ export default function EmbedPage() {
                     </div>
                 </div>
             ) : viewMode === "search" ? (
-                <div className={`relative z-10 flex items-center justify-center min-h-screen p-4 ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
+                <div className={`relative z-10 flex items-center justify-center py-4 px-4 ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
                     <div className="w-full max-w-4xl animate-fade-in">
                         {/* Logo/Header (Optional in embed) */}
                         {!embedParams.hideHeader && (
@@ -261,7 +263,7 @@ export default function EmbedPage() {
                     </div>
                 </div>
             ) : (
-                <div className={`relative z-10 min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
+                <div className={`relative z-10 bg-gradient-to-b from-gray-50 to-gray-100 ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
                     {/* Header for booking flow */}
                     <div
                         className="py-4 px-4 shadow-lg sticky top-0 z-50 backdrop-blur-md"
