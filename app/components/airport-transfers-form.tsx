@@ -87,6 +87,38 @@ export default function AirportTransfersForm({ onSearch, isLoading = false }: Ai
 
         setIsSubmitting(true);
 
+        // Check if we should redirect to parent's booking page
+        const urlParams = new URLSearchParams(window.location.search);
+        const shouldRedirect = urlParams.get('redirectOnSearch') === 'true';
+
+        if (shouldRedirect && window.parent !== window) {
+            // Collect all form data
+            const formData = {
+                serviceType: 'airport-transfers',
+                pickupLocation: pickUp,
+                dropoffLocation: dropOff,
+                pickupDate: date,
+                pickupTime: time,
+                returnDate: hasReturn ? returnDate : undefined,
+                returnTime: hasReturn ? returnTime : undefined,
+                passengers,
+                mode: "transfer" as const,
+                estimatedDistance: routeInfo ? `${routeInfo.distanceKm} km` : undefined,
+                estimatedDuration: routeInfo?.durationFormatted,
+                pickupCoords: pickupLocation?.position,
+                dropoffCoords: dropoffLocation?.position,
+            };
+
+            // Send message to parent window
+            window.parent.postMessage({
+                type: 'searchClicked',
+                formData: formData
+            }, '*');
+
+            setIsSubmitting(false);
+            return; // Don't continue with normal search
+        }
+
         // Simulate a brief loading state for better UX
         setTimeout(() => {
             if (onSearch) {

@@ -51,6 +51,35 @@ export default function CarRentalsForm({ onSearch, isLoading = false }: CarRenta
 
         setIsSubmitting(true);
 
+        // Check if we should redirect to parent's booking page
+        const urlParams = new URLSearchParams(window.location.search);
+        const shouldRedirect = urlParams.get('redirectOnSearch') === 'true';
+
+        if (shouldRedirect && window.parent !== window) {
+            // Collect all form data
+            const formData = {
+                serviceType: 'car-rentals',
+                pickupLocation: pickUpLocation,
+                dropoffLocation: differentLocation ? dropOffLocation : pickUpLocation,
+                pickupDate: pickUpDate,
+                pickupTime: pickUpTime,
+                returnDate: returnDate,
+                returnTime: returnTime,
+                mode: "rental" as const,
+                pickupCoords: pickupLocationData?.position,
+                dropoffCoords: differentLocation ? dropoffLocationData?.position : pickupLocationData?.position,
+            };
+
+            // Send message to parent window
+            window.parent.postMessage({
+                type: 'searchClicked',
+                formData: formData
+            }, '*');
+
+            setIsSubmitting(false);
+            return; // Don't continue with normal search
+        }
+
         // Simulate a brief loading state for better UX
         setTimeout(() => {
             if (onSearch) {
