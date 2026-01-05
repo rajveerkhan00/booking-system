@@ -47,11 +47,13 @@ export const DomainContextProvider = ({ children }: { children: ReactNode }) => 
             // 3. Current hostname
             const params = new URLSearchParams(window.location.search)
             const domainOverride = params.get('domain')
+            const allowAll = params.get('allowAll') === 'true'
 
             let hostname = window.location.hostname
+            let isInIframe = window.parent !== window
 
             // Check if we're in an iframe and get parent domain from referrer
-            if (!domainOverride && window.parent !== window && document.referrer) {
+            if (!domainOverride && isInIframe && document.referrer) {
                 try {
                     const referrerUrl = new URL(document.referrer)
                     hostname = referrerUrl.hostname
@@ -78,7 +80,20 @@ export const DomainContextProvider = ({ children }: { children: ReactNode }) => 
                 }
             } else {
                 console.warn('❌ No domain configuration found for:', domainToCheck)
-                setDomainConfig(null)
+
+                // Fallback: If in iframe and no config found, create a permissive default config
+                // This helps when referrer is blocked or domain isn't configured yet
+                if (isInIframe || allowAll) {
+                    console.log('🔓 Using fallback configuration for iframe/allowAll mode')
+                    setDomainConfig({
+                        _id: 'fallback',
+                        domainName: domainToCheck,
+                        isActive: true,
+                        cars: []
+                    })
+                } else {
+                    setDomainConfig(null)
+                }
             }
         } catch (err) {
             console.error('Failed to fetch domain config:', err)
