@@ -200,7 +200,7 @@ export default function EmbedPage() {
                     </div>
                 </div>
             ) : viewMode === "search" ? (
-                <div className={`relative z-10 flex items-center justify-center py-2 px-4 ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
+                <div className={`relative z-10 flex items-center justify-center py-1 px-4 ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
                     <div className="w-full max-w-4xl animate-fade-in">
                         {/* Logo/Header (Optional in embed) */}
                         {!embedParams.hideHeader && (
