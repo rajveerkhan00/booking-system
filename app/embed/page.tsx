@@ -200,17 +200,17 @@ export default function EmbedPage() {
                     </div>
                 </div>
             ) : viewMode === "search" ? (
-                <div className={`relative z-10 flex items-center justify-center py-4 px-4 ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
+                <div className={`relative z-10 flex items-center justify-center py-2 px-4 ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
                     <div className="w-full max-w-4xl animate-fade-in">
                         {/* Logo/Header (Optional in embed) */}
                         {!embedParams.hideHeader && (
-                            <div className="text-center mb-8">
-                                <div className="flex justify-center gap-2">
+                            <div className="mb-3">
+                                <div className="flex justify-start">
                                     <button
                                         onClick={() => setShowManageBooking(true)}
-                                        className="inline-flex items-left gap-1 px-4 py-1.5 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-lg text-white text-sm font-semibold transition-all hover:scale-105 active:scale-95 shadow-lg"
+                                        className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-lg text-white text-sm font-semibold transition-all hover:scale-105 active:scale-95 shadow-lg"
                                     >
-                                        <Search className="w-3.5 h-3.5" />
+                                        <Search className="w-4 h-4" />
                                         Manage Booking
                                     </button>
                                 </div>
