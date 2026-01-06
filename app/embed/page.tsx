@@ -205,9 +205,6 @@ export default function EmbedPage() {
                         {/* Logo/Header (Optional in embed) */}
                         {!embedParams.hideHeader && (
                             <div className="text-center mb-8">
-                                <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 drop-shadow-lg">
-                                    Book Your Transportation
-                                </h1>
                                 <div className="flex justify-center gap-4">
                                     <button
                                         onClick={() => setShowManageBooking(true)}
@@ -281,21 +278,7 @@ export default function EmbedPage() {
                             )}
                         </div>
 
-                        {/* Trust badges */}
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 animate-fade-in">
-                            <div className="flex items-center gap-3 text-white/95 bg-white/10 backdrop-blur-md px-4 py-3 rounded-xl border border-white/20">
-                                <Shield className="w-4 h-4" />
-                                <span className="text-xs font-semibold">Secure Booking</span>
-                            </div>
-                            <div className="flex items-center gap-3 text-white/95 bg-white/10 backdrop-blur-md px-4 py-3 rounded-xl border border-white/20">
-                                <Zap className="w-4 h-4" />
-                                <span className="text-xs font-semibold">Instant Confirmation</span>
-                            </div>
-                            <div className="flex items-center gap-3 text-white/95 bg-white/10 backdrop-blur-md px-4 py-3 rounded-xl border border-white/20">
-                                <BadgeCheck className="w-4 h-4" />
-                                <span className="text-xs font-semibold">Best Price</span>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
             ) : (
