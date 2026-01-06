@@ -205,12 +205,12 @@ export default function EmbedPage() {
                         {/* Logo/Header (Optional in embed) */}
                         {!embedParams.hideHeader && (
                             <div className="text-center mb-8">
-                                <div className="flex justify-center gap-4">
+                                <div className="flex justify-center gap-2">
                                     <button
                                         onClick={() => setShowManageBooking(true)}
-                                        className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-lg text-white text-sm font-semibold transition-all hover:scale-105 active:scale-95 shadow-lg"
+                                        className="inline-flex items-center gap-1 px-4 py-1.5 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-lg text-white text-sm font-semibold transition-all hover:scale-105 active:scale-95 shadow-lg"
                                     >
-                                        <Search className="w-4.5 h-4.5" />
+                                        <Search className="w-3.5 h-3.5" />
                                         Manage Booking
                                     </button>
                                 </div>
