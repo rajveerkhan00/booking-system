@@ -157,25 +157,20 @@ export default function EmbedPage() {
         }
     }
 
-    // Dynamic background style based on theme
-    const backgroundStyle = theme ? {
-        background: embedParams.hideBg ? 'transparent' : `linear-gradient(to bottom right, ${theme.backgroundStart}, ${theme.backgroundMiddle}, ${theme.backgroundEnd})`
-    } : undefined
-
-    // Background for the whole page
-    const pageStyle = showSkeleton
-        ? { background: embedParams.hideBg ? 'transparent' : '#ffffff' }
-        : (backgroundStyle || { background: embedParams.hideBg ? 'transparent' : 'linear-gradient(to bottom right, #14b8a6, #0d9488, #0f766e)' });
+    // Fixed black background - themes control only accent colors
+    const pageStyle = {
+        background: embedParams.hideBg ? 'transparent' : '#000000'
+    }
 
     if (!domainLoading && !domainConfig) {
         return (
-            <div className={`py-12 flex items-center justify-center ${embedParams.hideBg ? '' : 'bg-gray-50'} p-4`}>
+            <div className={`py-12 flex items-center justify-center ${embedParams.hideBg ? '' : 'bg-black'} p-4`}>
                 <div className="text-center max-w-md animate-fade-in">
-                    <div className="w-24 h-24 bg-gray-100 rounded-3xl flex items-center justify-center mx-auto mb-6 border-2 border-dashed border-gray-200">
+                    <div className="w-24 h-24 bg-gray-800 rounded-3xl flex items-center justify-center mx-auto mb-6 border-2 border-dashed border-gray-700">
                         <Globe className="w-12 h-12 text-gray-400" />
                     </div>
-                    <h1 className="text-3xl font-bold text-gray-800 mb-3">Service Unavailable</h1>
-                    <p className="text-gray-500 text-lg leading-relaxed">
+                    <h1 className="text-3xl font-bold text-white mb-3">Service Unavailable</h1>
+                    <p className="text-gray-400 text-lg leading-relaxed">
                         This booking form is not configured for this domain. Please contact support.
                     </p>
                 </div>
@@ -189,19 +184,6 @@ export default function EmbedPage() {
             className="relative overflow-hidden w-full"
             style={pageStyle}
         >
-            {/* Animated background elements */}
-            {!showSkeleton && !embedParams.hideBg && (
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <div
-                        className="absolute top-20 left-10 w-64 h-64 rounded-full blur-3xl animate-float"
-                        style={{ backgroundColor: theme ? `${theme.primaryColor}33` : 'rgba(20, 184, 166, 0.2)' }}
-                    />
-                    <div
-                        className="absolute top-40 right-20 w-96 h-96 rounded-full blur-3xl animate-float stagger-2"
-                        style={{ backgroundColor: theme ? `${theme.secondaryColor}26` : 'rgba(59, 130, 246, 0.15)' }}
-                    />
-                </div>
-            )}
 
             {showSkeleton ? (
                 <div className="relative z-10 flex items-center justify-center py-4 px-4">
@@ -317,18 +299,22 @@ export default function EmbedPage() {
                     </div>
                 </div>
             ) : (
-                <div className={`relative z-10 bg-gradient-to-b from-gray-50 to-gray-100 ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
+                <div className={`relative z-10 bg-black ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
                     {/* Header for booking flow */}
                     <div
-                        className="py-4 px-4 shadow-lg sticky top-0 z-50 backdrop-blur-md"
+                        className="py-4 px-4 shadow-lg sticky top-0 z-50 backdrop-blur-md border-b"
                         style={theme ? {
-                            background: `linear-gradient(to right, ${theme.backgroundMiddle}ee, ${theme.backgroundMiddle}ee, ${theme.backgroundEnd}ee)`
-                        } : { background: 'linear-gradient(to right, rgba(13, 148, 136, 0.95), rgba(13, 148, 136, 0.95), rgba(15, 118, 110, 0.95))' }}
+                            background: 'rgba(0, 0, 0, 0.95)',
+                            borderColor: theme.primaryColor
+                        } : { background: 'rgba(0, 0, 0, 0.95)', borderColor: '#14b8a6' }}
                     >
                         <div className="max-w-6xl mx-auto flex items-center justify-between">
                             <button
                                 onClick={handleBackToSearch}
                                 className="flex items-center gap-2 text-white hover:text-white/80 transition-all font-semibold group bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg border border-white/10"
+                                style={theme ? {
+                                    borderColor: `${theme.primaryColor}40`
+                                } : {}}
                             >
                                 <ArrowLeft className="w-4 h-4" />
                                 Back

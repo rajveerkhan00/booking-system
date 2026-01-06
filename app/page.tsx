@@ -74,29 +74,24 @@ export default function Home() {
     }
   }
 
-  // Dynamic background style based on theme
-  const backgroundStyle = theme ? {
-    background: `linear-gradient(to bottom right, ${theme.backgroundStart}, ${theme.backgroundMiddle}, ${theme.backgroundEnd})`
-  } : undefined
-
-  // Background for the whole page
-  const pageStyle = showSkeleton
-    ? { background: '#ffffff' }
-    : (backgroundStyle || { background: 'linear-gradient(to bottom right, #14b8a6, #0d9488, #0f766e)' });
+  // Fixed black background - themes control only accent colors
+  const pageStyle = {
+    background: '#000000'
+  }
 
   if (!domainLoading && !domainConfig) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-black p-4">
         <div className="text-center max-w-md animate-fade-in">
-          <div className="w-24 h-24 bg-gray-100 rounded-3xl flex items-center justify-center mx-auto mb-6 border-2 border-dashed border-gray-200">
+          <div className="w-24 h-24 bg-gray-800 rounded-3xl flex items-center justify-center mx-auto mb-6 border-2 border-dashed border-gray-700">
             <Globe className="w-12 h-12 text-gray-400" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-3">No Data Available</h1>
-          <p className="text-gray-500 text-lg leading-relaxed">
-            This domain (<span className="font-semibold text-gray-700">{typeof window !== 'undefined' ? window.location.hostname : ''}</span>) has not been configured in our system yet.
+          <h1 className="text-3xl font-bold text-white mb-3">No Data Available</h1>
+          <p className="text-gray-400 text-lg leading-relaxed">
+            This domain (<span className="font-semibold text-gray-300">{typeof window !== 'undefined' ? window.location.hostname : ''}</span>) has not been configured in our system yet.
           </p>
           <div className="mt-8">
-            <Link href="/" className="text-teal-600 font-semibold hover:underline">
+            <Link href="/" className="text-teal-400 font-semibold hover:underline">
               Go back home
             </Link>
           </div>
@@ -110,27 +105,6 @@ export default function Home() {
       className="min-h-screen relative overflow-hidden"
       style={pageStyle}
     >
-      {/* Animated background elements - Only show when NOT skeleton if we want pure white, or keep them for subtle effect? User asked for white background. Let's hide them or keep them subtle. Hiding them is safer for "white background". */}
-      {!showSkeleton && (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div
-            className="absolute top-20 left-10 w-64 h-64 rounded-full blur-3xl animate-float"
-            style={{ backgroundColor: theme ? `${theme.primaryColor}33` : 'rgba(20, 184, 166, 0.2)' }}
-          />
-          <div
-            className="absolute top-40 right-20 w-96 h-96 rounded-full blur-3xl animate-float stagger-2"
-            style={{ backgroundColor: theme ? `${theme.secondaryColor}26` : 'rgba(59, 130, 246, 0.15)' }}
-          />
-          <div
-            className="absolute bottom-20 left-1/3 w-80 h-80 rounded-full blur-3xl animate-float stagger-3"
-            style={{ backgroundColor: theme ? `${theme.accentColor}1a` : 'rgba(139, 92, 246, 0.1)' }}
-          />
-          <div
-            className="absolute -bottom-20 right-1/4 w-72 h-72 rounded-full blur-3xl animate-float stagger-4"
-            style={{ backgroundColor: theme ? `${theme.successColor}26` : 'rgba(16, 185, 129, 0.15)' }}
-          />
-        </div>
-      )}
 
       {showSkeleton ? (
         <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
@@ -330,18 +304,22 @@ export default function Home() {
           </div>
         </div>
       ) : (
-        <div className={`relative z-10 min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
+        <div className={`relative z-10 min-h-screen bg-black ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
           {/* Header for booking flow */}
           <div
-            className="py-4 px-4 shadow-lg sticky top-0 z-50 backdrop-blur-md"
+            className="py-4 px-4 shadow-lg sticky top-0 z-50 backdrop-blur-md border-b"
             style={theme ? {
-              background: `linear-gradient(to right, ${theme.backgroundMiddle}ee, ${theme.backgroundMiddle}ee, ${theme.backgroundEnd}ee)`
-            } : { background: 'linear-gradient(to right, rgba(13, 148, 136, 0.95), rgba(13, 148, 136, 0.95), rgba(15, 118, 110, 0.95))' }}
+              background: 'rgba(0, 0, 0, 0.95)',
+              borderColor: theme.primaryColor
+            } : { background: 'rgba(0, 0, 0, 0.95)', borderColor: '#14b8a6' }}
           >
             <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
               <button
                 onClick={handleBackToSearch}
                 className="w-full sm:w-auto flex items-center justify-center gap-2 text-white hover:text-white/80 transition-all font-semibold group bg-white/10 hover:bg-white/20 px-4 py-2.5 rounded-xl border border-white/10"
+                style={theme ? {
+                  borderColor: `${theme.primaryColor}40`
+                } : {}}
               >
                 <ArrowLeft className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" />
                 New Search
