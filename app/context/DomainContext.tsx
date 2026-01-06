@@ -64,7 +64,21 @@ export const DomainContextProvider = ({ children }: { children: ReactNode }) => 
                 }
             }
 
-            const domainToCheck = domainOverride || hostname
+            // Ensure we always have just the hostname (no protocol, no path)
+            let domainToCheck = domainOverride || hostname
+
+            // If domainToCheck contains protocol or path, extract just the hostname
+            if (domainToCheck.includes('://') || domainToCheck.includes('/')) {
+                try {
+                    // If it's a full URL, parse it to get just the hostname
+                    const urlObj = new URL(domainToCheck.startsWith('http') ? domainToCheck : `https://${domainToCheck}`)
+                    domainToCheck = urlObj.hostname
+                } catch (e) {
+                    // If URL parsing fails, try to extract hostname manually
+                    domainToCheck = domainToCheck.replace(/^https?:\/\//, '').split('/')[0]
+                }
+            }
+
             console.log('🔍 Checking domain configuration for:', domainToCheck)
 
             // Bypass domain check if allowAll is explicitly enabled (for testing only)
@@ -79,7 +93,7 @@ export const DomainContextProvider = ({ children }: { children: ReactNode }) => 
                 return
             }
 
-            const response = await fetch(`/api/domains?domainName=${domainToCheck}`)
+            const response = await fetch(`/api/domains?domainName=${encodeURIComponent(domainToCheck)}`)
             const result = await response.json()
 
             if (result.success && result.data) {
