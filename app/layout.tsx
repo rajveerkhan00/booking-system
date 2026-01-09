@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { ThemeContextProvider } from "./context/ThemeContext"
 import { DomainContextProvider } from "./context/DomainContext"
+import { GeolocationProvider } from "./context/GeolocationContext"
 import "./globals.css"
 
 const _geist = Geist({ subsets: ["latin"] })
@@ -43,11 +44,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans antialiased`} suppressHydrationWarning>
         <DomainContextProvider>
-          <ThemeContextProvider>
-            <PayPalProvider>
-              {children}
-            </PayPalProvider>
-          </ThemeContextProvider>
+          <GeolocationProvider>
+            <ThemeContextProvider>
+              <PayPalProvider>
+                {children}
+              </PayPalProvider>
+            </ThemeContextProvider>
+          </GeolocationProvider>
         </DomainContextProvider>
         <Analytics />
       </body>

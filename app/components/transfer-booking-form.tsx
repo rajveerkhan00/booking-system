@@ -6,6 +6,7 @@ import { TransferDetailsStep } from "./transfer-steps/transfer-details-step"
 import { TransferConfirmationStep } from "./transfer-steps/transfer-confirmation-step"
 import { TransferProgressBar } from "./transfer-progress-bar"
 import { getExchangeRates } from "@/lib/currency"
+import { useGeolocation } from "@/app/context/GeolocationContext"
 
 export type TransferStep = "search" | "details" | "confirmation"
 
@@ -89,6 +90,9 @@ export function TransferBookingForm({ initialData, onBack, isLoading = false }: 
     const [loadingRates, setLoadingRates] = useState(false)
     const [bookingReference, setBookingReference] = useState<string | null>(null)
 
+    // Get auto-detected currency from geolocation
+    const { detectedCurrency, loading: geoLoading } = useGeolocation()
+
     const [bookingData, setBookingData] = useState<TransferBookingData>({
         fromLocation: initialData?.pickupLocation || "Karachi, Sindh, Pakistan",
         toLocation: initialData?.dropoffLocation || "Lahore, Punjab, Pakistan",
@@ -97,7 +101,7 @@ export function TransferBookingForm({ initialData, onBack, isLoading = false }: 
         passengers: parseInt(initialData?.passengers || "2"),
         estimatedTime: "15 hours 19 mins",
         estimatedDistance: "1,211 km",
-        currency: "USD",
+        currency: "USD", // Will be updated by geolocation
         selectedTransfer: null,
         pickupAddress: "",
         destinationAddress: "",
@@ -112,6 +116,17 @@ export function TransferBookingForm({ initialData, onBack, isLoading = false }: 
         countryCode: "+92",
         termsAgreed: false,
     })
+
+    // Update currency when geolocation detects it
+    useEffect(() => {
+        if (!geoLoading && detectedCurrency) {
+            setBookingData(prev => ({
+                ...prev,
+                currency: detectedCurrency
+            }))
+            console.log(`💰 Transfer form: Currency auto-set to ${detectedCurrency} based on user location`)
+        }
+    }, [detectedCurrency, geoLoading])
 
     // Fetch exchange rates
     useEffect(() => {

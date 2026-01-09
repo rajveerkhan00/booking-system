@@ -296,28 +296,31 @@ export default function EmbedPage() {
                     </div>
                 </div>
             ) : (
-                <div className={`relative z-10 bg-black ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
-                    {/* Header for booking flow */}
+                <div className={`relative z-10 bg-white ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
+                    {/* Header for booking flow - white background */}
                     <div
-                        className="py-4 px-4 shadow-lg sticky top-0 z-50 backdrop-blur-md border-b"
+                        className="py-4 px-4 shadow-md sticky top-0 z-50 border-b bg-white"
                         style={theme ? {
-                            background: 'rgba(0, 0, 0, 0.95)',
-                            borderColor: theme.primaryColor
-                        } : { background: 'rgba(0, 0, 0, 0.95)', borderColor: '#14b8a6' }}
+                            borderColor: `${theme.primaryColor}30`
+                        } : { borderColor: '#14b8a630' }}
                     >
                         <div className="max-w-6xl mx-auto flex items-center justify-between">
                             <button
                                 onClick={handleBackToSearch}
-                                className="flex items-center gap-2 text-white hover:text-white/80 transition-all font-semibold group bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg border border-white/10"
-                                style={theme ? {
-                                    borderColor: `${theme.primaryColor}40`
-                                } : {}}
+                                className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-all font-semibold group bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg border border-gray-200"
                             >
                                 <ArrowLeft className="w-4 h-4" />
                                 Back
                             </button>
-                            <h1 className="text-lg font-bold text-white flex items-center gap-2">
-                                {searchData?.mode === "transfer" ? <Plane className="w-5 h-5" /> : <Car className="w-5 h-5" />}
+                            <h1 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+                                <div
+                                    className="w-8 h-8 rounded-lg flex items-center justify-center text-white"
+                                    style={theme ? {
+                                        background: `linear-gradient(to bottom right, ${theme.primaryColor}, ${theme.primaryDark})`
+                                    } : { background: 'linear-gradient(to bottom right, #0d9488, #0f766e)' }}
+                                >
+                                    {searchData?.mode === "transfer" ? <Plane className="w-4 h-4" /> : <Car className="w-4 h-4" />}
+                                </div>
                                 {searchData?.mode === "transfer" ? "Transfer" : "Rental"} Booking
                             </h1>
                             <div className="w-20" />
@@ -325,7 +328,7 @@ export default function EmbedPage() {
                     </div>
 
                     {/* Booking Form */}
-                    <div className="py-6 px-4">
+                    <div className="py-6 px-4 bg-gray-50">
                         {searchData?.mode === "transfer" ? (
                             <TransferBookingForm
                                 initialData={searchData}

@@ -304,28 +304,29 @@ export default function Home() {
           </div>
         </div>
       ) : (
-        <div className={`relative z-10 min-h-screen bg-black ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
-          {/* Header for booking flow */}
+        <div className={`relative z-10 min-h-screen bg-white ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
+          {/* Header for booking flow - white background with accent colors */}
           <div
-            className="py-4 px-4 shadow-lg sticky top-0 z-50 backdrop-blur-md border-b"
+            className="py-4 px-4 shadow-md sticky top-0 z-50 border-b bg-white"
             style={theme ? {
-              background: 'rgba(0, 0, 0, 0.95)',
-              borderColor: theme.primaryColor
-            } : { background: 'rgba(0, 0, 0, 0.95)', borderColor: '#14b8a6' }}
+              borderColor: `${theme.primaryColor}30`
+            } : { borderColor: '#14b8a630' }}
           >
             <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
               <button
                 onClick={handleBackToSearch}
-                className="w-full sm:w-auto flex items-center justify-center gap-2 text-white hover:text-white/80 transition-all font-semibold group bg-white/10 hover:bg-white/20 px-4 py-2.5 rounded-xl border border-white/10"
-                style={theme ? {
-                  borderColor: `${theme.primaryColor}40`
-                } : {}}
+                className="w-full sm:w-auto flex items-center justify-center gap-2 text-gray-700 hover:text-gray-900 transition-all font-semibold group bg-gray-100 hover:bg-gray-200 px-4 py-2.5 rounded-xl border border-gray-200"
               >
                 <ArrowLeft className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" />
                 New Search
               </button>
-              <h1 className="text-lg font-bold text-white flex items-center gap-3">
-                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+              <h1 className="text-lg font-bold text-gray-800 flex items-center gap-3">
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center text-white"
+                  style={theme ? {
+                    background: `linear-gradient(to bottom right, ${theme.primaryColor}, ${theme.primaryDark})`
+                  } : { background: 'linear-gradient(to bottom right, #0d9488, #0f766e)' }}
+                >
                   {searchData?.mode === "transfer" ? <Plane className="w-5 h-5" /> : <Car className="w-5 h-5" />}
                 </div>
                 {searchData?.mode === "transfer" ? "Airport Transfer" : "Car Rental"} <span className="hidden xs:inline">Booking</span>
@@ -335,7 +336,7 @@ export default function Home() {
           </div>
 
           {/* Booking Form - Different form based on mode */}
-          <div className="py-8 px-4">
+          <div className="py-8 px-4 bg-gray-50 min-h-[calc(100vh-80px)]">
             {searchData?.mode === "transfer" ? (
               <TransferBookingForm
                 initialData={searchData}

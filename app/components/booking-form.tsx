@@ -8,6 +8,7 @@ import { ConfirmationStep } from "./steps/confirmation-step"
 import { ProgressBar } from "./progress-bar"
 import { ArrowLeft } from "lucide-react"
 import { getExchangeRates } from "@/lib/currency"
+import { useGeolocation } from "@/app/context/GeolocationContext"
 
 export type BookingStep = "search" | "options" | "details" | "confirmation"
 
@@ -77,6 +78,9 @@ export function BookingForm({ initialData, onBack, isLoading = false }: BookingF
   const [loadingRates, setLoadingRates] = useState(false)
   const [bookingReference, setBookingReference] = useState<string | null>(null)
 
+  // Get auto-detected currency from geolocation
+  const { detectedCurrency, loading: geoLoading } = useGeolocation()
+
   const [bookingData, setBookingData] = useState<BookingData>({
     pickupLocation: initialData?.pickupLocation || "Karachi Jinnah International Airport",
     dropoffLocation: initialData?.dropoffLocation || "Karachi Jinnah International Airport",
@@ -84,7 +88,7 @@ export function BookingForm({ initialData, onBack, isLoading = false }: BookingF
     pickupTime: initialData?.pickupTime || "10:00",
     dropoffDate: initialData?.returnDate || "2026-02-27",
     dropoffTime: initialData?.returnTime || "10:00",
-    currency: "PKR",
+    currency: "USD", // Will be updated by geolocation
     selectedCar: null,
     extras: {
       additionalDriver: 0,
@@ -101,6 +105,17 @@ export function BookingForm({ initialData, onBack, isLoading = false }: BookingF
     rentalAgreement: false,
     insuranceOption: "standard",
   })
+
+  // Update currency when geolocation detects it
+  useEffect(() => {
+    if (!geoLoading && detectedCurrency) {
+      setBookingData(prev => ({
+        ...prev,
+        currency: detectedCurrency
+      }))
+      console.log(`💰 Currency auto-set to ${detectedCurrency} based on user location`)
+    }
+  }, [detectedCurrency, geoLoading])
 
   // Fetch exchange rates
   useEffect(() => {

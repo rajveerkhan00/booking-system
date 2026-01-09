@@ -1,7 +1,7 @@
 "use client"
 
 import type { BookingData } from "../booking-form"
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import Skeleton from "../Skeleton"
 import {
   User,
@@ -18,9 +18,11 @@ import {
   MapPin,
   Flag,
   Shield,
-  Zap
+  Zap,
+  AlertCircle
 } from "lucide-react"
 import { convertPrice, ALL_CURRENCIES } from "@/lib/currency"
+import { useGeolocation } from "@/app/context/GeolocationContext"
 
 interface DetailsStepProps {
   bookingData: BookingData
@@ -43,12 +45,44 @@ export function DetailsStep({
   const [rentalAgreement, setRentalAgreement] = useState(bookingData.rentalAgreement)
   const [isProcessing, setIsProcessing] = useState(false)
   const [focusedField, setFocusedField] = useState<string | null>(null)
+  const [licenseError, setLicenseError] = useState<string | null>(null)
+  const [licenseTouched, setLicenseTouched] = useState(false)
+
+  // Get geolocation context for license validation
+  const { validateLicenseNumber, licenseFormat, countryName } = useGeolocation()
 
   const handleInputChange = (field: keyof typeof details, value: string) => {
     const newDetails = { ...details, [field]: value }
     setDetails(newDetails)
     onUpdateDetails(newDetails)
+
+    // Validate license in real-time
+    if (field === 'licensNumber') {
+      if (value) {
+        const validation = validateLicenseNumber(value)
+        setLicenseError(validation.errorMessage)
+      } else {
+        setLicenseError(null)
+      }
+    }
   }
+
+  const handleLicenseBlur = () => {
+    setFocusedField(null)
+    setLicenseTouched(true)
+    // Validate on blur
+    if (details.licensNumber) {
+      const validation = validateLicenseNumber(details.licensNumber)
+      setLicenseError(validation.errorMessage)
+    }
+  }
+
+  // Check if license is valid
+  const isLicenseValid = useMemo(() => {
+    if (!details.licensNumber) return false
+    const validation = validateLicenseNumber(details.licensNumber)
+    return validation.isValid
+  }, [details.licensNumber, validateLicenseNumber])
 
   const handleContinue = () => {
     if (!isFormValid) return
@@ -60,14 +94,14 @@ export function DetailsStep({
   }
 
   const isFormValid =
-    details.firstName && details.lastName && details.email && details.phone && details.licensNumber && rentalAgreement
+    details.firstName && details.lastName && details.email && details.phone && isLicenseValid && rentalAgreement
 
   const inputFields = [
     { key: 'firstName' as const, label: 'First Name', type: 'text', placeholder: 'Enter your first name', icon: User, half: true },
     { key: 'lastName' as const, label: 'Last Name', type: 'text', placeholder: 'Enter your last name', icon: User, half: true },
     { key: 'email' as const, label: 'Email Address', type: 'email', placeholder: 'your.email@example.com', icon: Mail, half: false },
     { key: 'phone' as const, label: 'Phone Number', type: 'tel', placeholder: '+92 XXX XXXXXXX', icon: Phone, half: false },
-    { key: 'licensNumber' as const, label: 'Driving License Number', type: 'text', placeholder: 'Enter your license number', icon: CreditCard, half: false },
+    { key: 'licensNumber' as const, label: 'Driving License Number', type: 'text', placeholder: `Enter your license number (${licenseFormat.description})`, icon: CreditCard, half: false },
   ]
 
   if (isLoading) {
@@ -122,6 +156,10 @@ export function DetailsStep({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {inputFields.map((field, index) => {
                 const IconComponent = field.icon
+                const isLicenseField = field.key === 'licensNumber'
+                const showLicenseError = isLicenseField && licenseError && (licenseTouched || details.licensNumber.length > 0)
+                const isFieldValid = isLicenseField ? isLicenseValid : !!details[field.key]
+
                 return (
                   <div
                     key={field.key}
@@ -142,22 +180,56 @@ export function DetailsStep({
                         value={details[field.key]}
                         onChange={(e) => handleInputChange(field.key, e.target.value)}
                         onFocus={() => setFocusedField(field.key)}
-                        onBlur={() => setFocusedField(null)}
-                        className={`w-full px-4 py-3.5 border-2 rounded-xl focus:outline-none transition-all duration-300 ${details[field.key]
-                          ? 'border-primary/50 bg-primary/10'
-                          : 'border-gray-200'
+                        onBlur={isLicenseField ? handleLicenseBlur : () => setFocusedField(null)}
+                        className={`w-full px-4 py-3.5 border-2 rounded-xl focus:outline-none transition-all duration-300 ${showLicenseError
+                            ? 'border-red-400 bg-red-50'
+                            : isFieldValid
+                              ? 'border-primary/50 bg-primary/10'
+                              : 'border-gray-200'
                           } ${focusedField === field.key
-                            ? 'border-secondary shadow-lg shadow-secondary/10 ring-4 ring-secondary/20'
+                            ? showLicenseError
+                              ? 'border-red-400 shadow-lg shadow-red-100 ring-4 ring-red-100'
+                              : 'border-secondary shadow-lg shadow-secondary/10 ring-4 ring-secondary/20'
                             : 'hover:border-gray-300'
                           }`}
                         placeholder={field.placeholder}
                       />
-                      {details[field.key] && (
-                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-primary animate-scale-in">
-                          <Check className="w-5 h-5" />
-                        </span>
+                      {/* Show check mark for valid fields, warning for invalid license */}
+                      {isLicenseField ? (
+                        details.licensNumber && (
+                          isLicenseValid ? (
+                            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-primary animate-scale-in">
+                              <Check className="w-5 h-5" />
+                            </span>
+                          ) : (
+                            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-red-500 animate-scale-in">
+                              <AlertCircle className="w-5 h-5" />
+                            </span>
+                          )
+                        )
+                      ) : (
+                        details[field.key] && (
+                          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-primary animate-scale-in">
+                            <Check className="w-5 h-5" />
+                          </span>
+                        )
                       )}
                     </div>
+                    {/* License validation error message */}
+                    {isLicenseField && (
+                      <div className="mt-2">
+                        {showLicenseError ? (
+                          <p className="text-red-500 text-sm flex items-center gap-1.5 animate-fade-in">
+                            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                            {licenseError}
+                          </p>
+                        ) : (
+                          <p className="text-gray-500 text-xs">
+                            {countryName} license format: {licenseFormat.description}
+                          </p>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )
               })}
