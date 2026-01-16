@@ -304,7 +304,7 @@ export default function Home() {
           </div>
         </div>
       ) : (
-        <div className={`relative z-10 min-h-screen bg-black} transition-opacity duration-300`}>
+        <div className={`relative z-10 min-h-screen bg-black transition-opacity duration-300`}>
           {/* Header for booking flow - white background with accent colors */}
           <div
             className="py-4 px-4 shadow-md sticky top-0 z-50 border-b bg-black"
