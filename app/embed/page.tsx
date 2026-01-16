@@ -227,9 +227,9 @@ export default function EmbedPage() {
                         <div className="flex flex-col sm:flex-row mb-1 gap-1 sm:gap-0">
                             <button
                                 onClick={() => handleTabChange("transfers")}
-                                className={`flex items-center gap-3 px-6 py-4 text-base font-semibold transition-all duration-300 rounded-2xl sm:rounded-none sm:rounded-t-2xl ${activeTab === "transfers"
-                                    ? "bg-white text-gray-800 shadow-lg"
-                                    : "bg-white/20 text-white hover:bg-white/30 backdrop-blur-md"
+                                className={`flex items-center gap-3 px-6 py-4 text-base font-bold transition-all duration-300 rounded-2xl sm:rounded-none sm:rounded-t-2xl relative ${activeTab === "transfers"
+                                    ? "bg-white text-gray-800 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-10"
+                                    : "bg-black/40 text-gray-100 hover:bg-black/50 backdrop-blur-md border-t border-x border-white/10"
                                     }`}
                             >
                                 <div
@@ -244,9 +244,9 @@ export default function EmbedPage() {
                             </button>
                             <button
                                 onClick={() => handleTabChange("rentals")}
-                                className={`flex items-center gap-3 px-6 py-4 text-base font-semibold transition-all duration-300 rounded-2xl sm:rounded-none sm:rounded-t-2xl ${activeTab === "rentals"
-                                    ? "bg-white text-gray-800 shadow-lg"
-                                    : "bg-white/20 text-white hover:bg-white/30 backdrop-blur-md"
+                                className={`flex items-center gap-3 px-6 py-4 text-base font-bold transition-all duration-300 rounded-2xl sm:rounded-none sm:rounded-t-2xl relative ${activeTab === "rentals"
+                                    ? "bg-white text-gray-800 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-10"
+                                    : "bg-black/40 text-gray-100 hover:bg-black/50 backdrop-blur-md border-t border-x border-white/10"
                                     }`}
                             >
                                 <div
@@ -262,7 +262,7 @@ export default function EmbedPage() {
                         </div>
 
                         {/* Form Container */}
-                        <div className="bg-white/10 backdrop-blur-md border border-white/20 shadow-xl p-5 md:p-8 rounded-2xl sm:rounded-tl-none min-h-[280px]">
+                        <div className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl p-5 md:p-8 rounded-2xl sm:rounded-tl-none min-h-[280px] relative z-20">
                             {isFormLoading ? (
                                 <div className="animate-pulse space-y-8">
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -286,16 +286,22 @@ export default function EmbedPage() {
 
                         {/* Trust badges */}
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 animate-fade-in">
-                            <div className="flex items-center gap-3 text-white/95 bg-white/10 backdrop-blur-md px-4 py-3 rounded-xl border border-white/20">
-                                <Shield className="w-4 h-4" />
+                            <div className="flex items-center gap-3 text-white font-medium bg-black/30 backdrop-blur-md px-4 py-3 rounded-xl border border-white/10 shadow-lg hover:bg-black/40 transition-colors">
+                                <div className="p-1.5 bg-white/10 rounded-full">
+                                    <Shield className="w-4 h-4 text-emerald-400" />
+                                </div>
                                 <span className="text-xs font-semibold">Secure Booking</span>
                             </div>
-                            <div className="flex items-center gap-3 text-white/95 bg-white/10 backdrop-blur-md px-4 py-3 rounded-xl border border-white/20">
-                                <Zap className="w-4 h-4" />
+                            <div className="flex items-center gap-3 text-white font-medium bg-black/30 backdrop-blur-md px-4 py-3 rounded-xl border border-white/10 shadow-lg hover:bg-black/40 transition-colors">
+                                <div className="p-1.5 bg-white/10 rounded-full">
+                                    <Zap className="w-4 h-4 text-amber-400" />
+                                </div>
                                 <span className="text-xs font-semibold">Instant Confirmation</span>
                             </div>
-                            <div className="flex items-center gap-3 text-white/95 bg-white/10 backdrop-blur-md px-4 py-3 rounded-xl border border-white/20">
-                                <BadgeCheck className="w-4 h-4" />
+                            <div className="flex items-center gap-3 text-white font-medium bg-black/30 backdrop-blur-md px-4 py-3 rounded-xl border border-white/10 shadow-lg hover:bg-black/40 transition-colors">
+                                <div className="p-1.5 bg-white/10 rounded-full">
+                                    <BadgeCheck className="w-4 h-4 text-blue-400" />
+                                </div>
                                 <span className="text-xs font-semibold">Best Price</span>
                             </div>
                         </div>

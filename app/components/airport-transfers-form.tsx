@@ -277,7 +277,7 @@ export default function AirportTransfersForm({ onSearch, isLoading = false }: Ai
                         <select
                             value={passengers}
                             onChange={(e) => setPassengers(e.target.value)}
-                            className="select-premium w-full pr-10"
+                            className="select-premium w-full pr-10 bg-white"
                         >
                             {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
                                 <option key={num} value={num}>{num} {num === 1 ? 'Passenger' : 'Passengers'}</option>
@@ -302,7 +302,7 @@ export default function AirportTransfersForm({ onSearch, isLoading = false }: Ai
                         min={new Date().toLocaleDateString('en-CA')}
                         value={date}
                         onChange={(e) => setDate(e.target.value)}
-                        className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 transition-all duration-200 input-glow"
+                        className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 transition-all duration-200 input-glow bg-white"
                     />
                 </div>
 
@@ -317,16 +317,16 @@ export default function AirportTransfersForm({ onSearch, isLoading = false }: Ai
                         type="time"
                         value={time}
                         onChange={(e) => setTime(e.target.value)}
-                        className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 transition-all duration-200 input-glow"
+                        className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 transition-all duration-200 input-glow bg-white"
                     />
                 </div>
 
                 <div className="flex items-end">
                     <button
                         onClick={() => setHasReturn(!hasReturn)}
-                        className={`w-full px-4 py-3.5 border-2 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 ${hasReturn
-                            ? 'border-primary bg-primary/10 text-primary-dark shadow-soft'
-                            : 'border-gray-200 text-gray-600 hover:border-primary/50 hover:bg-primary/10/50'
+                        className={`w-full px-4 py-3.5 border-2 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 bg-white ${hasReturn
+                            ? 'border-primary text-primary-dark shadow-soft'
+                            : 'border-gray-200 text-gray-600 hover:border-primary/50'
                             }`}
                     >
                         {hasReturn ? (
@@ -347,9 +347,9 @@ export default function AirportTransfersForm({ onSearch, isLoading = false }: Ai
                     <button
                         onClick={handleSearch}
                         disabled={!isFormValid || isSubmitting}
-                        className={`w-full py-3.5 font-semibold text-base rounded-xl transition-all duration-300 flex items-center justify-center gap-2 ${isFormValid && !isSubmitting
-                            ? 'bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary-dark text-white shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5'
-                            : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                        className={`w-full py-3.5 font-bold text-base rounded-xl transition-all duration-300 flex items-center justify-center gap-2 ${isFormValid && !isSubmitting
+                            ? 'bg-gradient-to-r from-primary to-primary-dark hover:brightness-110 text-white shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 transform'
+                            : 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
                             }`}
                     >
                         {isSubmitting ? (
@@ -382,7 +382,7 @@ export default function AirportTransfersForm({ onSearch, isLoading = false }: Ai
                         min={new Date().toLocaleDateString('en-CA')}
                         value={returnDate}
                         onChange={(e) => setReturnDate(e.target.value)}
-                        className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 transition-all duration-200 input-glow"
+                        className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 transition-all duration-200 input-glow bg-white"
                     />
                 </div>
 
@@ -397,7 +397,7 @@ export default function AirportTransfersForm({ onSearch, isLoading = false }: Ai
                         type="time"
                         value={returnTime}
                         onChange={(e) => setReturnTime(e.target.value)}
-                        className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 transition-all duration-200 input-glow"
+                        className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 transition-all duration-200 input-glow bg-white"
                     />
                 </div>
             </div>

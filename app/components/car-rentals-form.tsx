@@ -204,14 +204,14 @@ export default function CarRentalsForm({ onSearch, isLoading = false }: CarRenta
                                 min={new Date().toLocaleDateString('en-CA')}
                                 value={pickUpDate}
                                 onChange={(e) => setPickUpDate(e.target.value)}
-                                className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 transition-all duration-200 input-glow"
+                                className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 transition-all duration-200 input-glow bg-white"
                             />
                         </div>
                         <div className="relative">
                             <select
                                 value={pickUpTime}
                                 onChange={(e) => setPickUpTime(e.target.value)}
-                                className="select-premium w-full pr-10"
+                                className="select-premium w-full pr-10 bg-white"
                             >
                                 {timeOptions.map(t => (
                                     <option key={t} value={t}>{t}</option>
@@ -236,14 +236,14 @@ export default function CarRentalsForm({ onSearch, isLoading = false }: CarRenta
                                 min={new Date().toLocaleDateString('en-CA')}
                                 value={returnDate}
                                 onChange={(e) => setReturnDate(e.target.value)}
-                                className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 transition-all duration-200 input-glow"
+                                className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 transition-all duration-200 input-glow bg-white"
                             />
                         </div>
                         <div className="relative">
                             <select
                                 value={returnTime}
                                 onChange={(e) => setReturnTime(e.target.value)}
-                                className="select-premium w-full pr-10"
+                                className="select-premium w-full pr-10 bg-white"
                             >
                                 {timeOptions.map(t => (
                                     <option key={t} value={t}>{t}</option>
@@ -277,9 +277,9 @@ export default function CarRentalsForm({ onSearch, isLoading = false }: CarRenta
                 <button
                     onClick={handleSearch}
                     disabled={!isFormValid || isSubmitting}
-                    className={`w-full md:w-96 py-4 font-semibold text-lg rounded-xl transition-all duration-300 flex items-center justify-center gap-3 ${isFormValid && !isSubmitting
-                        ? 'bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary-dark text-white shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5'
-                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    className={`w-full md:w-96 py-4 font-bold text-lg rounded-xl transition-all duration-300 flex items-center justify-center gap-3 ${isFormValid && !isSubmitting
+                        ? 'bg-gradient-to-r from-primary to-primary-dark hover:brightness-110 text-white shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 transform'
+                        : 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
                         }`}
                 >
                     {isSubmitting ? (
