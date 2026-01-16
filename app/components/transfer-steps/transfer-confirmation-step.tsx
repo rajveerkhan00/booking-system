@@ -157,12 +157,12 @@ export function TransferConfirmationStep({
     if (isConfirmed) {
         return (
             <div className="max-w-2xl mx-auto step-transition">
-                <div className="glass-card-elevated rounded-2xl p-8 text-center shadow-lg animate-scale-in">
+                <div className="bg-white rounded-lg border border-gray-200 p-8 text-center shadow-lg animate-scale-in">
                     <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
                         <span className="text-4xl text-white">✓</span>
                     </div>
-                    <h2 className="text-2xl font-bold text-white mb-3">Booking Confirmed!</h2>
-                    <p className="text-gray-300 mb-6">Your transfer has been successfully booked and paid via PayPal</p>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-3">Booking Confirmed!</h2>
+                    <p className="text-gray-600 mb-6">Your transfer has been successfully booked and paid via PayPal</p>
 
                     <div className="bg-primary/5 border border-primary/20 rounded-lg p-6 mb-6 text-left">
                         <p className="text-primary-dark font-semibold mb-2">Booking Reference:</p>
@@ -171,12 +171,12 @@ export function TransferConfirmationStep({
                         </p>
                     </div>
 
-                    <p className="text-gray-300 mb-6">
-                        Confirmation email sent to <span className="font-semibold text-white">{bookingData.email}</span>
+                    <p className="text-gray-600 mb-6">
+                        Confirmation email sent to <span className="font-semibold text-gray-800">{bookingData.email}</span>
                     </p>
 
                     <div className="flex gap-4">
-                        <button className="flex-1 border border-white/20 text-white font-semibold py-3 rounded-xl hover:bg-white/10 transition-colors">
+                        <button className="flex-1 border border-gray-300 text-gray-700 font-semibold py-3 rounded hover:bg-gray-50 transition-colors">
                             📧 Email Receipt
                         </button>
                         <button className="flex-1 bg-primary text-white font-semibold py-3 rounded hover:bg-primary-dark transition-colors">
@@ -234,9 +234,9 @@ export function TransferConfirmationStep({
                 {/* Sidebar - Summary */}
                 <div className="lg:col-span-1 space-y-4">
                     {/* Summary Card */}
-                    <div className="glass-card-elevated rounded-2xl shadow-sm">
-                        <div className="p-4 border-b border-white/10 flex justify-between items-center">
-                            <h3 className="font-bold text-white text-lg">Summary</h3>
+                    <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
+                        <div className="p-4 border-b border-gray-100 flex justify-between items-center">
+                            <h3 className="font-bold text-gray-800 text-lg">Summary</h3>
                             <button
                                 onClick={onEditQuote}
                                 className="bg-primary hover:bg-primary-dark text-white text-xs font-semibold px-3 py-1.5 rounded transition-colors flex items-center gap-1"
@@ -248,28 +248,28 @@ export function TransferConfirmationStep({
                             <div className="flex items-start gap-2">
                                 <span className="text-gray-400">🏠➡️</span>
                                 <div className="flex-1">
-                                    <p className="text-gray-400 text-xs">From</p>
-                                    <p className="text-white font-medium">{bookingData.fromLocation}</p>
+                                    <p className="text-gray-500 text-xs">From</p>
+                                    <p className="text-gray-800 font-medium">{bookingData.fromLocation}</p>
                                 </div>
                             </div>
                             <div className="flex items-start gap-2">
                                 <span className="text-gray-400">📍</span>
                                 <div className="flex-1">
-                                    <p className="text-gray-400 text-xs">To</p>
-                                    <p className="text-white font-medium">{bookingData.toLocation}</p>
+                                    <p className="text-gray-500 text-xs">To</p>
+                                    <p className="text-gray-800 font-medium">{bookingData.toLocation}</p>
                                 </div>
                             </div>
                             <div>
-                                <p className="text-gray-400 text-xs">Date</p>
-                                <p className="text-white font-medium">{formatDate(bookingData.date)}</p>
+                                <p className="text-gray-500 text-xs">Date</p>
+                                <p className="text-gray-800 font-medium">{formatDate(bookingData.date)}</p>
                             </div>
                             <div>
-                                <p className="text-gray-400 text-xs">Pick-Up Time</p>
-                                <p className="text-white font-medium">{bookingData.pickupTime}</p>
+                                <p className="text-gray-500 text-xs">Pick-Up Time</p>
+                                <p className="text-gray-800 font-medium">{bookingData.pickupTime}</p>
                             </div>
                             <div>
-                                <p className="text-gray-400 text-xs">Passengers</p>
-                                <p className="text-white font-medium">{bookingData.passengers}</p>
+                                <p className="text-gray-500 text-xs">Passengers</p>
+                                <p className="text-gray-800 font-medium">{bookingData.passengers}</p>
                             </div>
                         </div>
                     </div>
@@ -278,63 +278,63 @@ export function TransferConfirmationStep({
                 {/* Main Content */}
                 <div className="lg:col-span-3 space-y-6">
                     {/* Passenger Information Review */}
-                    <div className="glass-card-elevated rounded-2xl shadow-sm">
-                        <div className="p-5 border-b border-white/10">
-                            <h2 className="font-bold text-white text-xl">Passenger Information</h2>
+                    <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
+                        <div className="p-5 border-b border-gray-100">
+                            <h2 className="font-bold text-gray-800 text-xl">Passenger Information</h2>
                         </div>
                         <div className="p-5 space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                                 <div>
-                                    <p className="text-gray-400">Lead Passenger</p>
-                                    <p className="text-white font-semibold">
+                                    <p className="text-gray-500">Lead Passenger</p>
+                                    <p className="text-gray-800 font-semibold">
                                         {bookingData.passengerTitle} {bookingData.passengerName}
                                     </p>
                                 </div>
                                 <div>
-                                    <p className="text-gray-400">Email</p>
-                                    <p className="text-white font-semibold">{bookingData.email}</p>
+                                    <p className="text-gray-500">Email</p>
+                                    <p className="text-gray-800 font-semibold">{bookingData.email}</p>
                                 </div>
                                 <div>
-                                    <p className="text-gray-400">Mobile Phone</p>
-                                    <p className="text-white font-semibold">{bookingData.countryCode} {bookingData.phone}</p>
+                                    <p className="text-gray-500">Mobile Phone</p>
+                                    <p className="text-gray-800 font-semibold">{bookingData.countryCode} {bookingData.phone}</p>
                                 </div>
                                 <div>
-                                    <p className="text-gray-400">Pick-Up Address</p>
-                                    <p className="text-white font-semibold">{bookingData.pickupAddress || '-'}</p>
+                                    <p className="text-gray-500">Pick-Up Address</p>
+                                    <p className="text-gray-800 font-semibold">{bookingData.pickupAddress || '-'}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     {/* Payment Details */}
-                    <div className="glass-card-elevated rounded-2xl shadow-sm">
-                        <div className="p-5 border-b border-white/10">
-                            <h2 className="font-bold text-white text-xl">Payment Details</h2>
+                    <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
+                        <div className="p-5 border-b border-gray-100">
+                            <h2 className="font-bold text-gray-800 text-xl">Payment Details</h2>
                         </div>
                         <div className="p-5">
                             {/* Price Summary Box */}
                             <div className="bg-warning/10 border border-warning/20 rounded-lg p-5 mb-6">
-                                <h3 className="font-bold text-white mb-4">Summary</h3>
+                                <h3 className="font-bold text-gray-800 mb-4">Summary</h3>
                                 <div className="space-y-3 text-sm">
                                     <div className="flex justify-between">
-                                        <span className="text-gray-300">Vehicle Type</span>
-                                        <span className="text-white font-semibold">{bookingData.selectedTransfer?.name}</span>
+                                        <span className="text-gray-600">Vehicle Type</span>
+                                        <span className="text-gray-800 font-semibold">{bookingData.selectedTransfer?.name}</span>
                                     </div>
                                     <div className="flex justify-between">
-                                        <span className="text-gray-300">Transfer(s) Cost</span>
-                                        <span className="text-white font-semibold">
+                                        <span className="text-gray-600">Transfer(s) Cost</span>
+                                        <span className="text-gray-800 font-semibold">
                                             {bookingData.currency} {transferCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                                         </span>
                                     </div>
                                     <div className="flex justify-between">
-                                        <span className="text-gray-300">Extras Cost</span>
-                                        <span className="text-white font-semibold">
+                                        <span className="text-gray-600">Extras Cost</span>
+                                        <span className="text-gray-800 font-semibold">
                                             {bookingData.currency} {extrasCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                                         </span>
                                     </div>
                                     <div className="flex justify-between pt-3 border-t border-warning/30">
-                                        <span className="text-white font-bold">Total Price</span>
-                                        <span className="text-white font-bold text-lg">
+                                        <span className="text-gray-800 font-bold">Total Price</span>
+                                        <span className="text-gray-800 font-bold text-lg">
                                             {bookingData.currency} {totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                                         </span>
                                     </div>
@@ -348,9 +348,9 @@ export function TransferConfirmationStep({
                                         type="checkbox"
                                         checked={bookingData.termsAgreed}
                                         onChange={(e) => onUpdateData({ termsAgreed: e.target.checked })}
-                                        className="w-5 h-5 mt-0.5 rounded border-white/20 bg-white/5 text-primary focus:ring-primary"
+                                        className="w-5 h-5 mt-0.5 rounded border-gray-300 text-primary focus:ring-primary"
                                     />
-                                    <span className="text-gray-300 text-sm">
+                                    <span className="text-gray-700 text-sm">
                                         I have read and agree to the{" "}
                                         <a href="#" className="text-primary hover:underline font-medium">terms and conditions</a>
                                         {" "}and{" "}
@@ -368,8 +368,8 @@ export function TransferConfirmationStep({
 
                             <div className="mb-6">
                                 {isConfirming ? (
-                                    <div className="w-full py-4 bg-white/5 rounded flex items-center justify-center gap-2 text-gray-300 font-bold">
-                                        <span className="w-6 h-6 border-3 border-white/20 border-t-white rounded-full animate-spin" />
+                                    <div className="w-full py-4 bg-gray-100 rounded flex items-center justify-center gap-2 text-gray-400 font-bold">
+                                        <span className="w-6 h-6 border-3 border-gray-300 border-t-gray-500 rounded-full animate-spin" />
                                         Processing Payment...
                                     </div>
                                 ) : (
@@ -395,7 +395,7 @@ export function TransferConfirmationStep({
                         <button
                             onClick={onBack}
                             disabled={isConfirming}
-                            className="px-6 py-3 border border-white/20 rounded-xl text-gray-300 font-medium hover:bg-white/5 transition-colors disabled:opacity-50"
+                            className="px-6 py-3 border border-gray-300 rounded text-gray-600 font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
                         >
                             ← Back to Details
                         </button>
