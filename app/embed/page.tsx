@@ -286,19 +286,19 @@ export default function EmbedPage() {
 
                         {/* Trust badges */}
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 animate-fade-in">
-                            <div className="flex items-center gap-3 text-white font-medium bg-black/30 backdrop-blur-md px-4 py-3 rounded-xl border border-white/10 shadow-lg hover:bg-black/40 transition-colors">
+                            <div className="flex items-center gap-3 text-white font-medium bg-black/30 backdrop-blur-md px-4 py-3 rounded-xl shadow-lg hover:bg-black/40 transition-colors">
                                 <div className="p-1.5 bg-white/10 rounded-full">
                                     <ShieldCheck className="w-4 h-4 text-emerald-400" />
                                 </div>
                                 <span className="text-xs font-semibold">Secure Booking</span>
                             </div>
-                            <div className="flex items-center gap-3 text-white font-medium bg-black/30 backdrop-blur-md px-4 py-3 rounded-xl border border-white/10 shadow-lg hover:bg-black/40 transition-colors">
+                            <div className="flex items-center gap-3 text-white font-medium bg-black/30 backdrop-blur-md px-4 py-3 rounded-xl shadow-lg hover:bg-black/40 transition-colors">
                                 <div className="p-1.5 bg-white/10 rounded-full">
                                     <Zap className="w-4 h-4 text-amber-400" />
                                 </div>
                                 <span className="text-xs font-semibold">Instant Confirmation</span>
                             </div>
-                            <div className="flex items-center gap-3 text-white font-medium bg-black/30 backdrop-blur-md px-4 py-3 rounded-xl border border-white/10 shadow-lg hover:bg-black/40 transition-colors">
+                            <div className="flex items-center gap-3 text-white font-medium bg-black/30 backdrop-blur-md px-4 py-3 rounded-xl shadow-lg hover:bg-black/40 transition-colors">
                                 <div className="p-1.5 bg-white/10 rounded-full">
                                     <BadgePercent className="w-4 h-4 text-blue-400" />
                                 </div>
