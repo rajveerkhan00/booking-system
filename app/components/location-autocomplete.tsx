@@ -177,7 +177,7 @@ export function LocationAutocomplete({
     return (
         <div ref={containerRef} className={`relative ${className}`}>
             {label && (
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-white mb-2 shadow-black/50 drop-shadow-sm">
                     <span className="flex items-center gap-2">
                         {icon || <MapPin className={`w-4 h-4 ${iconColor}`} />}
                         {label}
@@ -195,7 +195,7 @@ export function LocationAutocomplete({
                     onFocus={() => value.length >= 2 && suggestions.length > 0 && setShowSuggestions(true)}
                     placeholder={placeholder}
                     disabled={disabled}
-                    className={`w-full px-4 py-3.5 pr-12 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 placeholder-gray-400 transition-all duration-200 input-glow ${disabled ? "bg-gray-100 cursor-not-allowed" : ""
+                    className={`w-full px-4 py-3.5 pr-12 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-black bg-white placeholder-gray-500 transition-all duration-200 input-glow ${disabled ? "bg-gray-100 cursor-not-allowed" : ""
                         } ${inputClassName}`}
                 />
 

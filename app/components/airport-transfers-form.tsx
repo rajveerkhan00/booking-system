@@ -267,7 +267,7 @@ export default function AirportTransfersForm({ onSearch, isLoading = false }: Ai
                 />
 
                 <div className="form-field">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-white mb-2 shadow-black/50 drop-shadow-sm">
                         <span className="flex items-center gap-2">
                             <Users className="w-4 h-4 text-accent" />
                             Passengers
@@ -277,7 +277,7 @@ export default function AirportTransfersForm({ onSearch, isLoading = false }: Ai
                         <select
                             value={passengers}
                             onChange={(e) => setPassengers(e.target.value)}
-                            className="select-premium w-full pr-10 bg-white"
+                            className="select-premium w-full pr-10 bg-white text-black"
                         >
                             {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
                                 <option key={num} value={num}>{num} {num === 1 ? 'Passenger' : 'Passengers'}</option>
@@ -291,7 +291,7 @@ export default function AirportTransfersForm({ onSearch, isLoading = false }: Ai
             {/* Second Row - Date, Time, Add Return, Search */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="form-field">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-white mb-2 shadow-black/50 drop-shadow-sm">
                         <span className="flex items-center gap-2">
                             <Calendar className="w-4 h-4 text-primary" />
                             Date
@@ -302,12 +302,12 @@ export default function AirportTransfersForm({ onSearch, isLoading = false }: Ai
                         min={new Date().toLocaleDateString('en-CA')}
                         value={date}
                         onChange={(e) => setDate(e.target.value)}
-                        className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 transition-all duration-200 input-glow bg-white"
+                        className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-black bg-white transition-all duration-200 input-glow"
                     />
                 </div>
 
                 <div className="form-field">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-white mb-2 shadow-black/50 drop-shadow-sm">
                         <span className="flex items-center gap-2">
                             <Clock className="w-4 h-4 text-secondary" />
                             Time
@@ -317,7 +317,7 @@ export default function AirportTransfersForm({ onSearch, isLoading = false }: Ai
                         type="time"
                         value={time}
                         onChange={(e) => setTime(e.target.value)}
-                        className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 transition-all duration-200 input-glow bg-white"
+                        className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-black bg-white transition-all duration-200 input-glow"
                     />
                 </div>
 
@@ -371,7 +371,7 @@ export default function AirportTransfersForm({ onSearch, isLoading = false }: Ai
             <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 overflow-hidden transition-all duration-500 ease-out ${hasReturn ? 'max-h-40 opacity-100 mt-6' : 'max-h-0 opacity-0 mt-0'
                 }`}>
                 <div className="form-field">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-white mb-2 shadow-black/50 drop-shadow-sm">
                         <span className="flex items-center gap-2">
                             <Calendar className="w-4 h-4 text-primary" />
                             Return Date
@@ -382,12 +382,12 @@ export default function AirportTransfersForm({ onSearch, isLoading = false }: Ai
                         min={new Date().toLocaleDateString('en-CA')}
                         value={returnDate}
                         onChange={(e) => setReturnDate(e.target.value)}
-                        className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 transition-all duration-200 input-glow bg-white"
+                        className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-black bg-white transition-all duration-200 input-glow"
                     />
                 </div>
 
                 <div className="form-field">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-white mb-2 shadow-black/50 drop-shadow-sm">
                         <span className="flex items-center gap-2">
                             <Clock className="w-4 h-4 text-secondary" />
                             Return Time
@@ -397,7 +397,7 @@ export default function AirportTransfersForm({ onSearch, isLoading = false }: Ai
                         type="time"
                         value={returnTime}
                         onChange={(e) => setReturnTime(e.target.value)}
-                        className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 transition-all duration-200 input-glow bg-white"
+                        className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-black bg-white transition-all duration-200 input-glow"
                     />
                 </div>
             </div>

@@ -172,7 +172,7 @@ export default function CarRentalsForm({ onSearch, isLoading = false }: CarRenta
                     />
                     <div className="w-12 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[22px] after:w-[22px] after:transition-all after:shadow-sm peer-checked:bg-gradient-to-r peer-checked:from-primary peer-checked:to-primary-dark"></div>
                 </label>
-                <span className="text-sm text-gray-700 font-medium">Return to a different location</span>
+                <span className="text-sm font-medium text-white shadow-black/50 drop-shadow-sm">Return to a different location</span>
             </div>
 
             {/* Different Drop-off Location - Animated */}
@@ -191,7 +191,7 @@ export default function CarRentalsForm({ onSearch, isLoading = false }: CarRenta
             {/* Pick-up and Return Date */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="form-field">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-white mb-2 shadow-black/50 drop-shadow-sm">
                         <span className="flex items-center gap-2">
                             <Calendar className="w-4 h-4 text-primary" />
                             Pick-up Date & Time
@@ -204,14 +204,14 @@ export default function CarRentalsForm({ onSearch, isLoading = false }: CarRenta
                                 min={new Date().toLocaleDateString('en-CA')}
                                 value={pickUpDate}
                                 onChange={(e) => setPickUpDate(e.target.value)}
-                                className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 transition-all duration-200 input-glow bg-white"
+                                className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-black bg-white transition-all duration-200 input-glow"
                             />
                         </div>
                         <div className="relative">
                             <select
                                 value={pickUpTime}
                                 onChange={(e) => setPickUpTime(e.target.value)}
-                                className="select-premium w-full pr-10 bg-white"
+                                className="select-premium w-full pr-10 bg-white text-black"
                             >
                                 {timeOptions.map(t => (
                                     <option key={t} value={t}>{t}</option>
@@ -223,7 +223,7 @@ export default function CarRentalsForm({ onSearch, isLoading = false }: CarRenta
                 </div>
 
                 <div className="form-field">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-white mb-2 shadow-black/50 drop-shadow-sm">
                         <span className="flex items-center gap-2">
                             <Calendar className="w-4 h-4 text-secondary" />
                             Return Date & Time
@@ -236,14 +236,14 @@ export default function CarRentalsForm({ onSearch, isLoading = false }: CarRenta
                                 min={new Date().toLocaleDateString('en-CA')}
                                 value={returnDate}
                                 onChange={(e) => setReturnDate(e.target.value)}
-                                className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 transition-all duration-200 input-glow bg-white"
+                                className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-black bg-white transition-all duration-200 input-glow"
                             />
                         </div>
                         <div className="relative">
                             <select
                                 value={returnTime}
                                 onChange={(e) => setReturnTime(e.target.value)}
-                                className="select-premium w-full pr-10 bg-white"
+                                className="select-premium w-full pr-10 bg-white text-black"
                             >
                                 {timeOptions.map(t => (
                                     <option key={t} value={t}>{t}</option>
