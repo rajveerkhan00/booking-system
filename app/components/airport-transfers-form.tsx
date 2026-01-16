@@ -191,7 +191,7 @@ export default function AirportTransfersForm({ onSearch, isLoading = false }: Ai
         <div className="space-y-6">
             {/* Route Info Display - Shows when both locations selected */}
             {(routeInfo || isCalculatingRoute) && (
-                <div className="bg-gradient-to-r from-primary/5 via-white to-secondary/5 rounded-2xl p-4 border border-primary/20 shadow-soft">
+                <div className="bg-gradient-to-r from-white/5 via-white to-white/5 rounded-2xl p-4 border border-primary/20 shadow-soft">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div className="flex flex-wrap items-center gap-4 sm:gap-6 w-full sm:w-auto">
                             <div className="flex items-center gap-2 min-w-[100px]">

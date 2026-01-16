@@ -211,7 +211,7 @@ export default function EmbedPage() {
                         {/* Logo/Header (Optional in embed) */}
                         {!embedParams.hideHeader && (
                             <div className="mb-3">
-                                <div className="flex justify-last">
+                                <div className="flex justify-end">
                                     <button
                                         onClick={() => setShowManageBooking(true)}
                                         className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-lg text-white text-sm font-semibold transition-all hover:scale-105 active:scale-95 shadow-lg"
