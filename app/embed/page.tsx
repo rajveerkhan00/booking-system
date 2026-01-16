@@ -262,7 +262,7 @@ export default function EmbedPage() {
                         </div>
 
                         {/* Form Container */}
-                        <div className="glass-card-elevated p-5 md:p-8 rounded-2xl sm:rounded-tl-none min-h-[280px]">
+                        <div className="bg-white/10 backdrop-blur-md border border-white/20 shadow-xl p-5 md:p-8 rounded-2xl sm:rounded-tl-none min-h-[280px]">
                             {isFormLoading ? (
                                 <div className="animate-pulse space-y-8">
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -302,10 +302,10 @@ export default function EmbedPage() {
                     </div>
                 </div>
             ) : (
-                <div className={`relative z-10 bg-white ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
-                    {/* Header for booking flow - white background */}
+                <div className={`relative z-10 bg-transparent ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
+                    {/* Header for booking flow - transparent/glass background */}
                     <div
-                        className="py-4 px-4 shadow-md sticky top-0 z-50 border-b bg-white"
+                        className="py-4 px-4 shadow-md sticky top-0 z-50 border-b bg-white/40 backdrop-blur-md"
                         style={theme ? {
                             borderColor: `${theme.primaryColor}30`
                         } : { borderColor: '#14b8a630' }}
@@ -334,7 +334,7 @@ export default function EmbedPage() {
                     </div>
 
                     {/* Booking Form */}
-                    <div className="py-6 px-4 bg-gray-50">
+                    <div className="py-6 px-4 bg-transparent">
                         {searchData?.mode === "transfer" ? (
                             <TransferBookingForm
                                 initialData={searchData}
