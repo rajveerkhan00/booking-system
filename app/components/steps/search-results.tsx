@@ -246,26 +246,26 @@ export function SearchResults({ onSelectCar, onUpdateCurrency, bookingData, isLo
             <CheckCircle className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-gray-800 font-semibold text-lg">Flexible cancellation with every booking</p>
-            <p className="text-gray-600 text-sm mt-1">Free cancellation up to 48 hours before pick-up</p>
+            <p className="text-white font-semibold text-lg">Flexible cancellation with every booking</p>
+            <p className="text-gray-300 text-sm mt-1">Free cancellation up to 48 hours before pick-up</p>
           </div>
         </div>
 
         {/* Sort Controls */}
         <div className="flex flex-wrap justify-between items-center mb-6 gap-4">
-          <p className="text-gray-700 font-medium">
-            <span className="text-2xl font-bold text-gray-900">{cars.length}</span> cars available
+          <p className="text-gray-300 font-medium">
+            <span className="text-2xl font-bold text-white">{cars.length}</span> cars available
           </p>
           <div className="flex items-center gap-3">
-            <span className="text-gray-600 font-medium">Sort by:</span>
-            <div className="flex bg-white rounded-xl p-1.5 shadow-soft border border-gray-100">
+            <span className="text-gray-300 font-medium">Sort by:</span>
+            <div className="flex bg-white/10 rounded-xl p-1.5 shadow-soft border border-white/20">
               {(["recommended", "price", "rating"] as const).map((option) => (
                 <button
                   key={option}
                   onClick={() => setSortBy(option)}
                   className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 flex items-center gap-1.5 ${sortBy === option
                     ? "bg-gradient-to-r from-secondary to-secondary-dark text-white shadow-md"
-                    : "text-gray-600 hover:bg-gray-50"
+                    : "text-gray-300 hover:bg-white/10"
                     }`}
                 >
                   {getSortIcon(option)}
@@ -385,7 +385,7 @@ function TripSummary({ bookingData, onUpdateCurrency }: { bookingData: BookingDa
 
   return (
     <div className="glass-card-elevated rounded-2xl p-6 animate-fade-in">
-      <h3 className="font-bold text-lg mb-4 text-gray-900 flex items-center gap-2">
+      <h3 className="font-bold text-lg mb-4 text-white flex items-center gap-2">
         <div className="icon-container icon-container-sm icon-container-primary rounded-lg">
           <ClipboardList className="w-4 h-4" />
         </div>
@@ -395,21 +395,21 @@ function TripSummary({ bookingData, onUpdateCurrency }: { bookingData: BookingDa
         <div className="relative pl-6 border-l-2 border-primary/50">
           <div className="absolute -left-[9px] top-0 w-4 h-4 bg-gradient-to-br from-primary to-primary-dark rounded-full shadow-sm"></div>
           <p className="text-primary text-xs font-semibold uppercase tracking-wide">Pick-up</p>
-          <p className="font-bold text-gray-900 mt-1">{bookingData.pickupLocation}</p>
-          <p className="text-gray-700 font-semibold">{formatDate(bookingData.pickupDate)}</p>
-          <p className="text-gray-600">{bookingData.pickupTime}</p>
+          <p className="font-bold text-white mt-1">{bookingData.pickupLocation}</p>
+          <p className="text-gray-300 font-semibold">{formatDate(bookingData.pickupDate)}</p>
+          <p className="text-gray-400">{bookingData.pickupTime}</p>
         </div>
         <div className="relative pl-6 border-l-2 border-secondary/50">
           <div className="absolute -left-[9px] top-0 w-4 h-4 bg-gradient-to-br from-secondary to-secondary-dark rounded-full shadow-sm"></div>
           <p className="text-secondary text-xs font-semibold uppercase tracking-wide">Drop-off</p>
-          <p className="font-bold text-gray-900 mt-1">{bookingData.dropoffLocation}</p>
-          <p className="text-gray-700 font-semibold">{formatDate(bookingData.dropoffDate)}</p>
-          <p className="text-gray-600">{bookingData.dropoffTime}</p>
+          <p className="font-bold text-white mt-1">{bookingData.dropoffLocation}</p>
+          <p className="text-gray-300 font-semibold">{formatDate(bookingData.dropoffDate)}</p>
+          <p className="text-gray-400">{bookingData.dropoffTime}</p>
         </div>
-        <div className="pt-4 border-t border-gray-100 flex justify-between items-center">
+        <div className="pt-4 border-t border-white/10 flex justify-between items-center">
           <div>
-            <p className="text-gray-600 text-sm font-medium">Currency</p>
-            <p className="font-bold text-gray-900">
+            <p className="text-gray-400 text-sm font-medium">Currency</p>
+            <p className="font-bold text-white">
               {ALL_CURRENCIES.find(c => c.code === bookingData.currency)?.symbol || ''} {bookingData.currency}
             </p>
           </div>
@@ -435,7 +435,7 @@ function TripSummary({ bookingData, onUpdateCurrency }: { bookingData: BookingDa
 function FilterSection() {
   return (
     <div className="glass-card-elevated rounded-2xl p-6 animate-fade-in stagger-2">
-      <h3 className="font-bold text-lg mb-4 text-gray-900 flex items-center gap-2">
+      <h3 className="font-bold text-lg mb-4 text-white flex items-center gap-2">
         <div className="icon-container icon-container-sm icon-container-secondary rounded-lg">
           <Search className="w-4 h-4" />
         </div>
@@ -443,46 +443,46 @@ function FilterSection() {
       </h3>
 
       <div className="mb-6">
-        <button className="flex items-center gap-2 font-bold text-gray-900 mb-3 w-full hover:text-primary transition-colors">
-          <Wallet className="w-4 h-4 text-gray-500" />
+        <button className="flex items-center gap-2 font-bold text-white mb-3 w-full hover:text-primary transition-colors">
+          <Wallet className="w-4 h-4 text-gray-400" />
           Price Range
         </button>
-        <p className="text-gray-600 text-sm mb-3">
-          Average: <span className="font-bold text-gray-900">₨ 241,264</span>
+        <p className="text-gray-300 text-sm mb-3">
+          Average: <span className="font-bold text-white">₨ 241,264</span>
         </p>
-        <div className="relative h-2.5 bg-gray-100 rounded-full overflow-hidden mb-2">
+        <div className="relative h-2.5 bg-gray-700/50 rounded-full overflow-hidden mb-2">
           <div className="absolute left-0 top-0 h-full w-3/4 bg-gradient-to-r from-primary/80 to-secondary/80 rounded-full" />
           <div className="absolute right-1/4 top-1/2 -translate-y-1/2 w-5 h-5 bg-white border-2 border-secondary rounded-full shadow-md cursor-pointer hover:scale-110 transition-transform" />
         </div>
-        <div className="flex justify-between text-xs text-gray-500 font-medium">
+        <div className="flex justify-between text-xs text-gray-400 font-medium">
           <span>₨ 73,002</span>
           <span>₨ 395,554+</span>
         </div>
       </div>
 
       <div className="mb-6">
-        <button className="flex items-center gap-2 font-bold text-gray-900 mb-3 w-full hover:text-primary transition-colors">
-          <Gauge className="w-4 h-4 text-gray-500" />
+        <button className="flex items-center gap-2 font-bold text-white mb-3 w-full hover:text-primary transition-colors">
+          <Gauge className="w-4 h-4 text-gray-400" />
           Transmission
         </button>
         <label className="flex items-center gap-3 mb-2 cursor-pointer group">
-          <input type="checkbox" defaultChecked className="w-5 h-5 rounded-lg border-gray-300 text-primary focus:ring-primary" />
-          <span className="text-gray-700 group-hover:text-gray-900 transition-colors font-medium">Automatic</span>
+          <input type="checkbox" defaultChecked className="w-5 h-5 rounded-lg border-gray-600 bg-gray-800 text-primary focus:ring-primary" />
+          <span className="text-gray-300 group-hover:text-white transition-colors font-medium">Automatic</span>
         </label>
         <label className="flex items-center gap-3 cursor-pointer group">
-          <input type="checkbox" className="w-5 h-5 rounded-lg border-gray-300 text-primary focus:ring-primary" />
-          <span className="text-gray-700 group-hover:text-gray-900 transition-colors font-medium">Manual</span>
+          <input type="checkbox" className="w-5 h-5 rounded-lg border-gray-600 bg-gray-800 text-primary focus:ring-primary" />
+          <span className="text-gray-300 group-hover:text-white transition-colors font-medium">Manual</span>
         </label>
       </div>
 
       <div>
-        <button className="flex items-center gap-2 font-bold text-gray-900 mb-3 w-full hover:text-primary transition-colors">
-          <Car className="w-4 h-4 text-gray-500" />
+        <button className="flex items-center gap-2 font-bold text-white mb-3 w-full hover:text-primary transition-colors">
+          <Car className="w-4 h-4 text-gray-400" />
           Car Specs
         </button>
         <label className="flex items-center gap-3 cursor-pointer group">
-          <input type="checkbox" defaultChecked className="w-5 h-5 rounded-lg border-gray-300 text-primary focus:ring-primary" />
-          <span className="text-gray-700 group-hover:text-gray-900 transition-colors font-medium flex items-center gap-1.5">
+          <input type="checkbox" defaultChecked className="w-5 h-5 rounded-lg border-gray-600 bg-gray-800 text-primary focus:ring-primary" />
+          <span className="text-gray-300 group-hover:text-white transition-colors font-medium flex items-center gap-1.5">
             <Wind className="w-3.5 h-3.5 text-gray-400" />
             Air Conditioning
           </span>

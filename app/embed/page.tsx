@@ -6,7 +6,7 @@ import AirportTransfersForm from "../components/airport-transfers-form"
 import CarRentalsForm from "../components/car-rentals-form"
 import { BookingForm } from "../components/booking-form"
 import { TransferBookingForm } from "../components/transfer-booking-form"
-import { Plane, Car, Shield, Zap, BadgeCheck, ArrowLeft, Globe, Search } from "lucide-react"
+import { Plane, Car, ShieldCheck, Zap, BadgePercent, ArrowLeft, Globe, Search } from "lucide-react"
 import { useTheme } from "../context/ThemeContext"
 import { useDomain } from "../context/DomainContext"
 import Link from "next/link"
@@ -288,7 +288,7 @@ export default function EmbedPage() {
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 animate-fade-in">
                             <div className="flex items-center gap-3 text-white font-medium bg-black/30 backdrop-blur-md px-4 py-3 rounded-xl border border-white/10 shadow-lg hover:bg-black/40 transition-colors">
                                 <div className="p-1.5 bg-white/10 rounded-full">
-                                    <Shield className="w-4 h-4 text-emerald-400" />
+                                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
                                 </div>
                                 <span className="text-xs font-semibold">Secure Booking</span>
                             </div>
@@ -300,7 +300,7 @@ export default function EmbedPage() {
                             </div>
                             <div className="flex items-center gap-3 text-white font-medium bg-black/30 backdrop-blur-md px-4 py-3 rounded-xl border border-white/10 shadow-lg hover:bg-black/40 transition-colors">
                                 <div className="p-1.5 bg-white/10 rounded-full">
-                                    <BadgeCheck className="w-4 h-4 text-blue-400" />
+                                    <BadgePercent className="w-4 h-4 text-blue-400" />
                                 </div>
                                 <span className="text-xs font-semibold">Best Price</span>
                             </div>
@@ -311,10 +311,10 @@ export default function EmbedPage() {
                 <div className={`relative z-10 bg-transparent ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
                     {/* Header for booking flow - transparent/glass background */}
                     <div
-                        className="py-4 px-4 shadow-md sticky top-0 z-50 border-b bg-white/40 backdrop-blur-md"
+                        className="py-4 px-4 shadow-md sticky top-0 z-50 border-b bg-black/40 backdrop-blur-md border-white/10"
                         style={theme ? {
                             borderColor: `${theme.primaryColor}30`
-                        } : { borderColor: '#14b8a630' }}
+                        } : { borderColor: 'rgba(255, 255, 255, 0.1)' }}
                     >
                         <div className="max-w-6xl mx-auto flex items-center justify-between">
                             <button
@@ -324,7 +324,7 @@ export default function EmbedPage() {
                                 <ArrowLeft className="w-4 h-4" />
                                 Back
                             </button>
-                            <h1 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+                            <h1 className="text-lg font-bold text-white flex items-center gap-2">
                                 <div
                                     className="w-8 h-8 rounded-lg flex items-center justify-center text-white"
                                     style={theme ? {

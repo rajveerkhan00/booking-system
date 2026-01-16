@@ -407,7 +407,7 @@ export function TransferSearchResults({
         <div className="step-transition">
             {/* Title */}
             <div className="text-center mb-8">
-                <h1 className="text-2xl font-bold text-gray-800">
+                <h1 className="text-2xl font-bold text-white">
                     Transfer quotes from <span className="text-primary">{bookingData.fromLocation.split(',')[0]}</span> to <span className="text-primary">{bookingData.toLocation.split(',')[0]}</span>
                 </h1>
             </div>
@@ -415,7 +415,7 @@ export function TransferSearchResults({
             {/* Sort and Round Trip */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                 <div className="flex items-center gap-3 w-full sm:w-auto">
-                    <span className="text-gray-600 text-sm font-medium flex items-center gap-1.5 shrink-0">
+                    <span className="text-gray-300 text-sm font-medium flex items-center gap-1.5 shrink-0">
                         <ArrowUpDown className="w-4 h-4" />
                         Sort by:
                     </span>
@@ -432,8 +432,8 @@ export function TransferSearchResults({
                 <button
                     onClick={() => setShowRoundTrip(!showRoundTrip)}
                     className={`w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 border-2 rounded-xl text-sm font-semibold transition-all duration-300 ${showRoundTrip
-                        ? 'border-primary bg-primary/5 text-primary-dark shadow-soft'
-                        : 'border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300'
+                        ? 'border-primary bg-primary/20 text-primary shadow-soft'
+                        : 'border-white/20 text-gray-300 hover:bg-white/10 hover:border-white/30'
                         }`}
                 >
                     <RefreshCw className="w-4 h-4" />
@@ -446,8 +446,8 @@ export function TransferSearchResults({
                 <div className="lg:col-span-1 space-y-4">
                     {/* Summary Card */}
                     <div className="glass-card-elevated rounded-2xl overflow-hidden">
-                        <div className="p-4 border-b border-gray-100 flex justify-between items-center">
-                            <h3 className="font-bold text-gray-800 text-lg">
+                        <div className="p-4 border-b border-white/10 flex justify-between items-center">
+                            <h3 className="font-bold text-white text-lg">
                                 {isEditMode ? 'Edit Quote' : 'Summary'}
                             </h3>
                             {!isEditMode && (
@@ -501,7 +501,7 @@ export function TransferSearchResults({
                                         min={new Date().toLocaleDateString('en-CA')}
                                         value={editFormData.date}
                                         onChange={(e) => setEditFormData(prev => ({ ...prev, date: e.target.value }))}
-                                        className="w-full px-3 py-2 border-2 border-gray-200 rounded-xl text-sm font-medium focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                        className="w-full px-3 py-2 border-2 border-white/20 bg-white text-gray-900 rounded-xl text-sm font-medium focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
                                     />
                                 </div>
 
@@ -515,7 +515,7 @@ export function TransferSearchResults({
                                         type="time"
                                         value={editFormData.pickupTime}
                                         onChange={(e) => setEditFormData(prev => ({ ...prev, pickupTime: e.target.value }))}
-                                        className="w-full px-3 py-2 border-2 border-gray-200 rounded-xl text-sm font-medium focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                        className="w-full px-3 py-2 border-2 border-white/20 bg-white text-gray-900 rounded-xl text-sm font-medium focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
                                     />
                                 </div>
 
@@ -528,7 +528,7 @@ export function TransferSearchResults({
                                     <select
                                         value={editFormData.passengers}
                                         onChange={(e) => setEditFormData(prev => ({ ...prev, passengers: parseInt(e.target.value) }))}
-                                        className="select-premium w-full"
+                                        className="select-premium w-full bg-white text-gray-900"
                                     >
                                         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
                                             <option key={num} value={num}>{num} {num === 1 ? 'Passenger' : 'Passengers'}</option>
@@ -573,30 +573,30 @@ export function TransferSearchResults({
                                     </div>
                                     <div className="flex-1 space-y-3">
                                         <div>
-                                            <p className="text-gray-500 text-xs font-medium">From</p>
-                                            <p className="text-gray-800 font-semibold">{bookingData.fromLocation}</p>
+                                            <p className="text-gray-400 text-xs font-medium">From</p>
+                                            <p className="text-white font-semibold">{bookingData.fromLocation}</p>
                                         </div>
                                         <div>
-                                            <p className="text-gray-500 text-xs font-medium">To</p>
-                                            <p className="text-gray-800 font-semibold">{bookingData.toLocation}</p>
+                                            <p className="text-gray-400 text-xs font-medium">To</p>
+                                            <p className="text-white font-semibold">{bookingData.toLocation}</p>
                                         </div>
                                         <div>
-                                            <p className="text-gray-500 text-xs font-medium flex items-center gap-1">
+                                            <p className="text-gray-400 text-xs font-medium flex items-center gap-1">
                                                 <Calendar className="w-3 h-3" /> Date
                                             </p>
-                                            <p className="text-gray-800 font-semibold">{formatDate(bookingData.date)}</p>
+                                            <p className="text-white font-semibold">{formatDate(bookingData.date)}</p>
                                         </div>
                                         <div>
-                                            <p className="text-gray-500 text-xs font-medium flex items-center gap-1">
+                                            <p className="text-gray-400 text-xs font-medium flex items-center gap-1">
                                                 <Clock className="w-3 h-3" /> Pick-Up Time
                                             </p>
-                                            <p className="text-gray-800 font-semibold">{bookingData.pickupTime}</p>
+                                            <p className="text-white font-semibold">{bookingData.pickupTime}</p>
                                         </div>
                                         <div>
-                                            <p className="text-gray-500 text-xs font-medium flex items-center gap-1">
+                                            <p className="text-gray-400 text-xs font-medium flex items-center gap-1">
                                                 <Users className="w-3 h-3" /> Passengers
                                             </p>
-                                            <p className="text-gray-800 font-semibold">{bookingData.passengers}</p>
+                                            <p className="text-white font-semibold">{bookingData.passengers}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -607,7 +607,7 @@ export function TransferSearchResults({
                     {/* Currency Selector */}
                     <div className="glass-card-elevated rounded-2xl p-4">
                         <div className="flex justify-between items-center">
-                            <span className="text-gray-600 text-sm font-medium">Change Currency</span>
+                            <span className="text-gray-300 text-sm font-medium">Change Currency</span>
                             <select
                                 value={bookingData.currency}
                                 onChange={(e) => onUpdateCurrency(e.target.value)}
@@ -630,7 +630,7 @@ export function TransferSearchResults({
                             </div>
                             <div>
                                 <p className="text-primary text-xs font-medium">Estimated Trip Time</p>
-                                <p className="text-gray-800 font-bold">{bookingData.estimatedTime}</p>
+                                <p className="text-white font-bold">{bookingData.estimatedTime}</p>
                             </div>
                         </div>
                         <div className="flex items-center gap-3 text-sm">
@@ -639,7 +639,7 @@ export function TransferSearchResults({
                             </div>
                             <div>
                                 <p className="text-primary text-xs font-medium">Estimated Distance</p>
-                                <p className="text-gray-800 font-bold">{bookingData.estimatedDistance}</p>
+                                <p className="text-white font-bold">{bookingData.estimatedDistance}</p>
                             </div>
                         </div>
                     </div>
@@ -647,7 +647,7 @@ export function TransferSearchResults({
                     {/* Route / Map */}
                     <div className="glass-card-elevated rounded-2xl p-4">
                         <div className="flex justify-between items-center">
-                            <span className="text-gray-600 text-sm font-medium">Route</span>
+                            <span className="text-gray-300 text-sm font-medium">Route</span>
                             <button
                                 onClick={() => setShowMapModal(true)}
                                 className="btn-primary text-xs px-4 py-2 flex items-center gap-1.5"
@@ -837,7 +837,7 @@ interface TransferCardProps {
 function TransferCard({ transfer, currency, exchangeRates, isSelected, onBookNow, animationDelay }: TransferCardProps) {
     return (
         <div
-            className={`bg-white border-2 rounded-2xl overflow-hidden transition-all duration-300 animate-fade-in ${isSelected ? 'border-primary shadow-glow-primary' : 'border-gray-100 hover:shadow-medium hover:border-gray-200'
+            className={`glass-card-elevated border-2 rounded-2xl overflow-hidden transition-all duration-300 animate-fade-in ${isSelected ? 'border-primary shadow-glow-primary' : 'border-white/10 hover:shadow-medium hover:border-white/20'
                 }`}
             style={{ animationDelay: `${animationDelay}s` }}
         >
@@ -846,7 +846,7 @@ function TransferCard({ transfer, currency, exchangeRates, isSelected, onBookNow
                 <div className="md:col-span-8 p-4 sm:p-5">
                     <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
                         {/* Vehicle Image */}
-                        <div className="flex-shrink-0 w-32 h-24 sm:w-36 sm:h-24 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl flex items-center justify-center border border-gray-100/50">
+                        <div className="flex-shrink-0 w-32 h-24 sm:w-36 sm:h-24 bg-gradient-to-br from-white/10 to-white/5 rounded-xl flex items-center justify-center border border-white/10">
                             <img
                                 src={transfer.image || "/placeholder-car.png"}
                                 alt={transfer.name}
@@ -861,7 +861,7 @@ function TransferCard({ transfer, currency, exchangeRates, isSelected, onBookNow
                         <div className="flex-1 w-full text-center sm:text-left">
                             <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4">
                                 <div>
-                                    <h3 className="font-bold text-gray-800 text-lg sm:text-xl">{transfer.name}</h3>
+                                    <h3 className="font-bold text-white text-lg sm:text-xl">{transfer.name}</h3>
                                     <p className="text-primary text-sm font-bold uppercase tracking-widest">{transfer.type}</p>
                                 </div>
                                 {/* Capacity indicators */}
@@ -903,7 +903,7 @@ function TransferCard({ transfer, currency, exchangeRates, isSelected, onBookNow
                 </div>
 
                 {/* Price & Book */}
-                <div className="md:col-span-4 bg-gradient-to-br from-gray-50/50 to-white/30 p-4 sm:p-5 flex flex-col justify-between border-t md:border-t-0 md:border-l border-gray-100">
+                <div className="md:col-span-4 bg-gradient-to-br from-white/5 to-white/10 p-4 sm:p-5 flex flex-col justify-between border-t md:border-t-0 md:border-l border-white/10">
                     <div className="text-center md:text-left">
                         <p className="text-success text-[10px] font-bold uppercase tracking-widest mb-2 bg-success/10 px-2 py-1 rounded-full w-fit mx-auto md:mx-0 border border-success/20">{transfer.cancellationPolicy}</p>
                         <div className="flex items-baseline justify-center md:justify-start gap-1">
