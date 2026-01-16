@@ -157,14 +157,14 @@ export default function EmbedPage() {
         }
     }
 
-    // Fixed black background - themes control only accent colors
+    // Transparent background to blend with parent website
     const pageStyle = {
-        background: embedParams.hideBg ? 'transparent' : '#000000'
+        background: 'transparent'
     }
 
     if (!domainLoading && !domainConfig) {
         return (
-            <div className={`py-12 flex items-center justify-center ${embedParams.hideBg ? '' : 'bg-black'} p-4`}>
+            <div className={`py-12 flex items-center justify-center p-4`}>
                 <div className="text-center max-w-md animate-fade-in">
                     <div className="w-24 h-24 bg-gray-800 rounded-3xl flex items-center justify-center mx-auto mb-6 border-2 border-dashed border-gray-700">
                         <Globe className="w-12 h-12 text-gray-400" />
@@ -184,6 +184,12 @@ export default function EmbedPage() {
             className="relative overflow-hidden w-full"
             style={pageStyle}
         >
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                html, body {
+                    background: transparent !important;
+                }
+            `}} />
 
             {showSkeleton ? (
                 <div className="relative z-10 flex items-center justify-center py-4 px-4">
