@@ -185,14 +185,14 @@ export default function TransferQuotesForm() {
           {/* Right Content - Quotes List */}
           <div className="lg:col-span-3">
             {/* Page Title */}
-            <h3 className="text-2xl font-serif text-slate-900 mb-6 text-center">
+            <h3 className="text-2xl font-serif text-gray-800 mb-6 text-center">
               Transfer quotes from Karachi to Lahore
             </h3>
 
             {/* Filters */}
             <div className="flex justify-between items-center mb-6 gap-4">
               <div className="flex items-center gap-3">
-                <label className="text-sm font-medium text-slate-700">Sort by:</label>
+                <label className="text-sm font-medium text-gray-100">Sort by:</label>
                 <div className="relative">
                   <select
                     value={sortBy}
@@ -207,7 +207,7 @@ export default function TransferQuotesForm() {
                 </div>
               </div>
 
-              <button className="flex items-center gap-2 border border-slate-300 rounded-lg px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors group">
+              <button className="flex items-center gap-2 border border-slate-300 rounded-lg px-4 py-2 text-sm font-medium text-gray-100 hover:bg-slate-50 transition-colors group">
                 Round Trip Quote?
                 <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
               </button>

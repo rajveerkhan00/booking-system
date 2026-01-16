@@ -238,7 +238,7 @@ export default function AirportTransfersForm({ onSearch, isLoading = false }: Ai
                                 </>
                             )}
                         </div>
-                        <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider flex items-center gap-1.5 bg-white/50 px-2 py-1 rounded-full border border-gray-100">
+                        <div className="text-[10px] text-gray-200 font-bold uppercase tracking-wider flex items-center gap-1.5 bg-black px-2 py-1 rounded-full border border-gray-200">
                             <span className="inline-block w-2 h-2 bg-success rounded-full animate-pulse" />
                             Live traffic
                         </div>

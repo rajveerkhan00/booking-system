@@ -407,7 +407,7 @@ export function TransferSearchResults({
         <div className="step-transition">
             {/* Title */}
             <div className="text-center mb-8">
-                <h1 className="text-2xl font-bold text-gray-800">
+                <h1 className="text-2xl font-bold text-gray-100">
                     Transfer quotes from <span className="text-primary">{bookingData.fromLocation.split(',')[0]}</span> to <span className="text-primary">{bookingData.toLocation.split(',')[0]}</span>
                 </h1>
             </div>
@@ -415,7 +415,7 @@ export function TransferSearchResults({
             {/* Sort and Round Trip */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                 <div className="flex items-center gap-3 w-full sm:w-auto">
-                    <span className="text-gray-600 text-sm font-medium flex items-center gap-1.5 shrink-0">
+                    <span className="text-gray-100 text-sm font-medium flex items-center gap-1.5 shrink-0">
                         <ArrowUpDown className="w-4 h-4" />
                         Sort by:
                     </span>
@@ -433,7 +433,7 @@ export function TransferSearchResults({
                     onClick={() => setShowRoundTrip(!showRoundTrip)}
                     className={`w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 border-2 rounded-xl text-sm font-semibold transition-all duration-300 ${showRoundTrip
                         ? 'border-primary bg-primary/5 text-primary-dark shadow-soft'
-                        : 'border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300'
+                        : 'border-gray-200 text-gray-100 hover:bg-gray-50 hover:border-gray-300'
                         }`}
                 >
                     <RefreshCw className="w-4 h-4" />

@@ -307,7 +307,7 @@ export default function Home() {
         <div className={`relative z-10 min-h-screen bg-white ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
           {/* Header for booking flow - white background with accent colors */}
           <div
-            className="py-4 px-4 shadow-md sticky top-0 z-50 border-b bg-white"
+            className="py-4 px-4 shadow-md sticky top-0 z-50 border-b bg-black"
             style={theme ? {
               borderColor: `${theme.primaryColor}30`
             } : { borderColor: '#14b8a630' }}
@@ -320,7 +320,7 @@ export default function Home() {
                 <ArrowLeft className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" />
                 New Search
               </button>
-              <h1 className="text-lg font-bold text-gray-800 flex items-center gap-3">
+              <h1 className="text-lg font-bold text-gray-100 flex items-center gap-3">
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center text-white"
                   style={theme ? {
