@@ -311,12 +311,13 @@ export default function EmbedPage() {
                 <div className={`relative z-10 bg-transparent ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
                     {/* Header for booking flow - transparent/glass background */}
                     <div
-                        className="py-4 px-4 shadow-md sticky top-0 z-50 border-b bg-white border-gray-200"
-                        style={theme ? {
-                            borderColor: `${theme.primaryColor}30`
-                        } : { borderColor: 'rgba(0, 0, 0, 0.1)' }}
+                        className="sticky top-0 z-50 px-4 pt-4 pb-2"
+                        style={{ pointerEvents: 'none' }}
                     >
-                        <div className="max-w-6xl mx-auto flex items-center justify-between">
+                        <div
+                            className="max-w-6xl mx-auto flex items-center justify-between bg-white rounded-2xl shadow-md border border-gray-200 px-6 py-3"
+                            style={{ pointerEvents: 'auto' }}
+                        >
                             <button
                                 onClick={handleBackToSearch}
                                 className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-all font-semibold group bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg border border-gray-200"
