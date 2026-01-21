@@ -32,6 +32,7 @@ import {
     ArrowRightLeft
 } from "lucide-react"
 import Link from "next/link"
+import { UserButton } from "@clerk/nextjs"
 import { CurrencyConverter } from "../../components/admin/CurrencyConverter"
 import { ALL_CURRENCIES } from "@/lib/currency"
 
@@ -366,6 +367,23 @@ export default function AdminCarsPage() {
                                 <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
                                 <span className="hidden sm:inline">Refresh</span>
                             </button>
+
+                            {/* Clerk User Profile Button */}
+                            <div className="flex items-center">
+                                <UserButton
+                                    appearance={{
+                                        elements: {
+                                            avatarBox: "w-10 h-10 border-2 border-gray-200 hover:border-teal-500 transition-all shadow-sm",
+                                            userButtonPopoverCard: "shadow-xl border border-gray-200",
+                                            userButtonPopoverActionButton: "hover:bg-gray-100",
+                                            userButtonPopoverActionButtonText: "text-gray-700",
+                                            userButtonPopoverFooter: "hidden"
+                                        }
+                                    }}
+                                    afterSignOutUrl="/"
+                                />
+                            </div>
+
                             <button
                                 onClick={handleAddNew}
                                 className="btn-primary flex items-center gap-2 text-sm px-4 py-2.5"

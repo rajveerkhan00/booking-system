@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import { ClerkProvider } from "@clerk/nextjs"
 import { ThemeContextProvider } from "./context/ThemeContext"
 import { DomainContextProvider } from "./context/DomainContext"
 import { GeolocationProvider } from "./context/GeolocationContext"
@@ -41,19 +42,21 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`font-sans antialiased`} suppressHydrationWarning>
-        <DomainContextProvider>
-          <GeolocationProvider>
-            <ThemeContextProvider>
-              <PayPalProvider>
-                {children}
-              </PayPalProvider>
-            </ThemeContextProvider>
-          </GeolocationProvider>
-        </DomainContextProvider>
-        <Analytics />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={`font-sans antialiased`} suppressHydrationWarning>
+          <DomainContextProvider>
+            <GeolocationProvider>
+              <ThemeContextProvider>
+                <PayPalProvider>
+                  {children}
+                </PayPalProvider>
+              </ThemeContextProvider>
+            </GeolocationProvider>
+          </DomainContextProvider>
+          <Analytics />
+        </body>
+      </html>
+    </ClerkProvider>
   )
 }
