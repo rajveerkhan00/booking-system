@@ -29,12 +29,14 @@ import {
     Upload,
     Palette,
     Globe,
-    ArrowRightLeft
+    ArrowRightLeft,
+    MapPin
 } from "lucide-react"
 import Link from "next/link"
 import { UserButton } from "@clerk/nextjs"
 import { CurrencyConverter } from "../../components/admin/CurrencyConverter"
-import { ALL_CURRENCIES } from "@/lib/currency"
+import { ALL_CURRENCIES, getExchangeRates, convertPrice } from "@/lib/currency"
+import { useGeolocation } from "../../context/GeolocationContext"
 
 interface CarData {
     _id?: string
@@ -119,6 +121,30 @@ export default function AdminCarsPage() {
     const [seeding, setSeeding] = useState(false)
     const [imageFile, setImageFile] = useState<File | null>(null)
     const [showCurrencyConverter, setShowCurrencyConverter] = useState(false)
+    const [exchangeRates, setExchangeRates] = useState<Record<string, number> | null>(null)
+
+    // Get user's geolocation and detected currency
+    const { detectedCurrency, currencySymbol, countryName, loading: geoLoading } = useGeolocation()
+
+    // Fetch exchange rates on mount
+    useEffect(() => {
+        const fetchRates = async () => {
+            const rates = await getExchangeRates('USD')
+            if (rates) {
+                setExchangeRates(rates)
+            }
+        }
+        fetchRates()
+    }, [])
+
+    // Helper function to convert price from car's currency to user's detected currency
+    const getConvertedPrice = useCallback((price: number, fromCurrency: string) => {
+        if (!exchangeRates || !price) return null
+        // Convert from car's currency to USD first, then to user's currency
+        const fromRate = exchangeRates[fromCurrency] || 1
+        const toRate = exchangeRates[detectedCurrency] || 1
+        return Math.round(convertPrice(price, fromRate, toRate))
+    }, [exchangeRates, detectedCurrency])
 
     // Toast notification system
     const showToast = useCallback((message: string, type: ToastType) => {
@@ -333,7 +359,18 @@ export default function AdminCarsPage() {
                                 </div>
                                 <div>
                                     <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Car Management</h1>
-                                    <p className="text-gray-500 text-xs sm:text-sm">Manage vehicles</p>
+                                    <div className="flex items-center gap-2">
+                                        <p className="text-gray-500 text-xs sm:text-sm">Manage vehicles</p>
+                                        {/* Location & Currency Badge */}
+                                        {!geoLoading && (
+                                            <div className="flex items-center gap-1.5 px-2 py-0.5 bg-teal-50 text-teal-700 rounded-full text-xs font-medium border border-teal-200">
+                                                <MapPin className="w-3 h-3" />
+                                                <span>{countryName}</span>
+                                                <span className="text-teal-500">•</span>
+                                                <span className="font-semibold">{currencySymbol} {detectedCurrency}</span>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -734,6 +771,9 @@ export default function AdminCarsPage() {
                                 onEdit={() => handleEdit(car)}
                                 onDelete={() => handleDelete(car._id!)}
                                 onToggleActive={() => toggleActive(car)}
+                                detectedCurrency={detectedCurrency}
+                                currencySymbol={currencySymbol}
+                                getConvertedPrice={getConvertedPrice}
                             />
                         ))}
                     </div>
@@ -839,15 +879,21 @@ function FormSelect({ label, value, onChange, options }: {
 }
 
 // Car Card Component - Premium Glass Style
-function CarCard({ car, isExpanded, onToggleExpand, onEdit, onDelete, onToggleActive }: {
+function CarCard({ car, isExpanded, onToggleExpand, onEdit, onDelete, onToggleActive, detectedCurrency, currencySymbol, getConvertedPrice }: {
     car: CarData
     isExpanded: boolean
     onToggleExpand: () => void
     onEdit: () => void
     onDelete: () => void
     onToggleActive: () => void
+    detectedCurrency: string
+    currencySymbol: string
+    getConvertedPrice: (price: number, fromCurrency: string) => number | null
 }) {
     const isTransfer = car.carType === 'transfer'
+    const convertedPrice = getConvertedPrice(car.price, car.currency)
+    const convertedPricePerDay = car.pricePerDay ? getConvertedPrice(car.pricePerDay, car.currency) : null
+    const showConvertedPrice = detectedCurrency !== car.currency && convertedPrice !== null
 
     return (
         <div className={`bg-white border-2 rounded-2xl overflow-hidden transition-all duration-300 ${car.isActive ? 'border-gray-100 shadow-sm hover:shadow-medium hover:border-gray-200' : 'border-amber-200 bg-amber-50/20 shadow-sm opacity-80'
@@ -912,13 +958,38 @@ function CarCard({ car, isExpanded, onToggleExpand, onEdit, onDelete, onToggleAc
                 </div>
 
                 {/* Price */}
-                <div className="text-right px-4">
-                    <p className="text-2xl font-bold text-gray-900">
+                <div className="text-right px-4 min-w-[180px]">
+                    {/* Original Price */}
+                    <p className={`font-bold ${showConvertedPrice ? 'text-gray-400 text-sm line-through' : 'text-gray-900 text-2xl'}`}>
                         {car.currency} {car.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                     </p>
+
+                    {/* Converted Price (user's currency) */}
+                    {showConvertedPrice && (
+                        <p className="text-2xl font-bold text-teal-600">
+                            {currencySymbol} {convertedPrice?.toLocaleString()}
+                        </p>
+                    )}
+
+                    {/* Per Day Pricing */}
                     {!isTransfer && car.pricePerDay && (
-                        <p className="text-gray-500 text-sm font-medium">
-                            {car.currency} {car.pricePerDay.toLocaleString('en-US', { minimumFractionDigits: 2 })}/day
+                        <div className="mt-1">
+                            {showConvertedPrice && convertedPricePerDay ? (
+                                <p className="text-teal-600 text-sm font-medium">
+                                    {currencySymbol} {convertedPricePerDay.toLocaleString()}/day
+                                </p>
+                            ) : (
+                                <p className="text-gray-500 text-sm font-medium">
+                                    {car.currency} {car.pricePerDay.toLocaleString('en-US', { minimumFractionDigits: 2 })}/day
+                                </p>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Currency indicator */}
+                    {showConvertedPrice && (
+                        <p className="text-xs text-gray-400 mt-1">
+                            ≈ in {detectedCurrency}
                         </p>
                     )}
                 </div>
