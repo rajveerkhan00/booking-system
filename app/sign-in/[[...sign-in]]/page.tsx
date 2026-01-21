@@ -1,6 +1,23 @@
 import { SignIn } from '@clerk/nextjs'
 
+// Force dynamic rendering to prevent build-time errors
+export const dynamic = 'force-dynamic'
+
 export default function SignInPage() {
+    // Check if Clerk is configured
+    const isClerkConfigured = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+
+    if (!isClerkConfigured) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+                <div className="text-center text-white">
+                    <h1 className="text-2xl font-bold mb-4">Authentication Not Configured</h1>
+                    <p className="text-slate-400">Please configure Clerk authentication keys.</p>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
             {/* Background decorative elements */}
@@ -36,3 +53,4 @@ export default function SignInPage() {
         </div>
     )
 }
+

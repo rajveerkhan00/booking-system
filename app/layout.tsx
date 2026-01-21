@@ -36,13 +36,24 @@ export const metadata: Metadata = {
 
 import { PayPalProvider } from "./components/PayPalProvider"
 
+// Conditional Clerk wrapper - only wraps when publishable key is available
+function ConditionalClerkProvider({ children }: { children: React.ReactNode }) {
+  const clerkPubKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+
+  if (clerkPubKey) {
+    return <ClerkProvider publishableKey={clerkPubKey}>{children}</ClerkProvider>
+  }
+
+  return <>{children}</>
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
   return (
-    <ClerkProvider>
+    <ConditionalClerkProvider>
       <html lang="en">
         <body className={`font-sans antialiased`} suppressHydrationWarning>
           <DomainContextProvider>
@@ -57,6 +68,6 @@ export default function RootLayout({
           <Analytics />
         </body>
       </html>
-    </ClerkProvider>
+    </ConditionalClerkProvider>
   )
 }
